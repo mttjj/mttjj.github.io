@@ -1,6 +1,6 @@
 ---
 layout: page
-title: books read by year
+title: books
 permalink: /books/
 ---
 <div class="year-list">

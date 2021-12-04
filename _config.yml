@@ -1,13 +1,16 @@
 # Site info
 title: matthew's website
-author: Matthew Janssen
+author:
+    name: Matthew Janssen
 
 # build info
 theme: minima
 
 # config
 header_pages:
-- lists.md
+- films.md
+- books.md
+- games.md
 
 collections:
 
