@@ -1,12 +1,11 @@
 ---
 layout: page
-title: films
-permalink: /films/
+title: books read by year
+permalink: /books/
 ---
-<h1>films watched by year</h1>
 <div class="year-list">
     <ul>
-    {% for year in site.films reversed %}
+    {% for year in site.books reversed %}
         <li><a href="{{ year.url }}">{{ year.short-title }}</a></li>
     {% endfor %}
     </ul>

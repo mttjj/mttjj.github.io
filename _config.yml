@@ -8,3 +8,17 @@ theme: minima
 # config
 header_pages:
 - lists.md
+
+collections:
+
+    books:
+      output: true
+      permalink: /books/:path/
+
+    films:
+      output: true
+      permalink: /films/:path/
+
+    games:
+      output: true
+      permalink: /games/:path/
