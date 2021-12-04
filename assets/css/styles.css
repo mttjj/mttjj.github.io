@@ -1,6 +1,9 @@
 ---
 ---
 
+@import "minima/skins/{{ site.minima.skin | default: 'classic' }}";
+@import "minima/initialize";
+
 /**
  * Lists
  */
@@ -59,6 +62,3 @@
 .year-list ul {
     list-style-type: circle;
 }
-
-@import "minima/skins/{{ site.minima.skin | default: 'classic' }}";
-@import "minima/initialize";
