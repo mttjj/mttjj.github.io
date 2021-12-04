@@ -1,6 +1,6 @@
 ---
 layout: page
-title: films watched by year
+title: films
 permalink: /films/
 ---
 <div class="year-list">

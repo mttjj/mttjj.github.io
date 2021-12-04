@@ -1,6 +1,6 @@
 ---
 layout: page
-title: games beaten by year
+title: games
 permalink: /games/
 ---
 <div class="year-list">
