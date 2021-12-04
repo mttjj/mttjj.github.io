@@ -1,5 +1,5 @@
 # Site info
-title: matthew's musings
+title: matthew's website
 author: Matthew Janssen
 
 # build info
@@ -7,4 +7,4 @@ theme: minima
 
 # config
 header_pages:
-- index.md
+- lists.md
