@@ -1,9 +1,8 @@
 ---
 layout: page
-title: lists
+title: completion lists
 permalink: /lists/
 ---
-# completion lists
 [books](books.html)
 
 [films](films.html)

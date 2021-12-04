@@ -1,12 +1,11 @@
 ---
 layout: page
-title: books
-permalink: /books/
+title: games beaten by year
+permalink: /games/
 ---
-<h1>books read by year</h1>
 <div class="year-list">
     <ul>
-    {% for year in site.books reversed %}
+    {% for year in site.games reversed %}
         <li><a href="{{ year.url }}">{{ year.short-title }}</a></li>
     {% endfor %}
     </ul>
