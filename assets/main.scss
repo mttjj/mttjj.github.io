@@ -3,27 +3,24 @@
 @import "minima";
 
 /**
+ * Year Lists
+ */
+.year-list ul {
+    list-style-type: circle;
+}
+
+/**
  * Lists
  */
-.list-header {
-    margin-bottom: $spacing-unit;
-}
-
-.list-title {
-    font-size: 30px;
-    line-height: 1;
-}
-
 .list-content {
-    margin-bottom: $spacing-unit;
-    line-height: 16px;
+    line-height: 14px;
     font-family: monospace;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.5px
 
     h2 {
         margin-top: 30px;
         font-size: 20px;
-        font-weight: bold;
+        font-weight: bold
     }
 }
 
@@ -52,11 +49,4 @@
     margin-top: 40px;
     text-indent: 10px;
     text-align: justify;
-}
-
-/**
- * Year Lists
- */
-.year-list ul {
-    list-style-type: circle;
 }
