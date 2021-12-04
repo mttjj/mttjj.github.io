@@ -3,8 +3,8 @@ layout: page
 title: completion lists
 permalink: /lists/
 ---
-[books](books.html)
+[books](books.md)
 
-[films](films.html)
+[films](films.md)
 
-[games](games.html)
+[games](games.md)
