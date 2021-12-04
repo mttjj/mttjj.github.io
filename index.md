@@ -2,4 +2,4 @@
 layout: default
 title: home
 ---
-# Website
+This is the homepage.
