@@ -14,8 +14,6 @@ title = "Lonesome Dove"
 
 ### Quotes
 
-#quote
-
 
 
 * The thought had just occurred to him, so, following his habit, he put it at once into speech. (p88)
