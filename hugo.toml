@@ -1,0 +1,10 @@
+baseURL = 'https://matthewjanssen.org/'
+languageCode = 'en-us'
+title = "Matthew's Website"
+theme = 'hugo-bearblog'
+
+disableKinds = ['rss']
+
+# hugo-bearblog config
+[params]
+  hideMadeWithLine = true
