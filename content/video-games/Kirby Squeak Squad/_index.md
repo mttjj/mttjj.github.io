@@ -1,0 +1,4 @@
++++
+title = "Kirby: Squeak Squad"
++++
+

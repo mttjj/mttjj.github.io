@@ -1,0 +1,4 @@
++++
+title = "Hyrule Warriors"
++++
+
