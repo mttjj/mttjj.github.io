@@ -81,7 +81,7 @@ def transform_diet_pages(dir):
 
     :param dir: The root directory to start traversal.
     """
-    media_type_map = {"Book" : "books", "Comic" : "comics", "Film" : "films", "Graphic Novel" : "graphic-novels", "Live Theatre" : "live-theatre", "Manga": "manga", "TV" : "tv-series", "Video Game" : "video-game"}
+    media_type_map = {"Book" : "books", "Comic" : "comics", "Film" : "films", "Graphic Novel" : "graphic-novels", "Live Theatre" : "live-theatre", "Manga": "manga", "TV" : "tv-series", "Video Game" : "video-games"}
 
     for root, _, files in os.walk(dir):
         for file in files:
