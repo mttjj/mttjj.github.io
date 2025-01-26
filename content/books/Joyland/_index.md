@@ -14,8 +14,6 @@ title = "Joyland"
 
 ### Quotes
 
-#quote
-
 
 
 * I would argue that - fantasies aside - the majority of men are monogamous from the chin up. Below the belt-buckle, however, there's a wahoo stampeder who just doesn't give a shit.  (p117)

@@ -14,8 +14,6 @@ title = "The New Life"
 
 ### Quotes
 
-#quote
-
 
 
 * "These are different times."

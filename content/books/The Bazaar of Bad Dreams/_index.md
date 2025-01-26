@@ -12,8 +12,6 @@ title = "The Bazaar of Bad Dreams"
 
 ### Quotes
 
-#quote
-
 
 
 * God's grace is a pretty cool concept. It stays intact every time it's not you. (p286)

@@ -91,7 +91,7 @@ def transform_taxonomy_term_file_contents(dir):
                     remaining_lines = lines[2:]
 
                     # Remove '[' and ']' from the remaining lines
-                    cleaned_lines = [line.replace("[", "").replace("]", "") for line in remaining_lines]
+                    cleaned_lines = [line.replace("[", "").replace("]", "") for line in remaining_lines if "#quote" not in line]
 
                     # Create the front matter block
                     title = first_line[1:].strip() if len(first_line) > 0 else ""
