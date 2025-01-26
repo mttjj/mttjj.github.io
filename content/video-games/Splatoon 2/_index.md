@@ -1,0 +1,4 @@
++++
+title = "Splatoon 2"
++++
+
