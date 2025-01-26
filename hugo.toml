@@ -5,6 +5,16 @@ theme = 'hugo-bearblog'
 
 disableKinds = ['rss']
 
+[taxonomies]
+  book = 'books'
+  comic = 'comics'
+  film = 'films'
+  graphic-novel = 'graphic-novels'
+  live-theatre = 'live-theatre'
+  manga = 'manga'
+  tv-series = 'tv-series'
+  video-game = 'video-games'
+
 # hugo-bearblog config
 [params]
   hideMadeWithLine = true
