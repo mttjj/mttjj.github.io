@@ -71,7 +71,7 @@ def create_index_files(dir):
 
             # Write the `_index.md` file
             with open(index_file_path, 'w', encoding='utf-8') as f:
-                f.write(f"+++\ntitle = \"{title}\"\n+++\n")
+                f.write(f"+++\ntitle = \"{title}\"\nsort_order = \"{directory}\"\n+++\n")
 
             logger.debug(f"Created file: {index_file_path}")
 
