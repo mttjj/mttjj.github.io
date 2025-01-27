@@ -122,6 +122,7 @@ def transform_diet_pages(dir):
                     # Create the front matter block
                     title = first_line[1:] if len(first_line) > 0 else ""
                     front_matter = f"+++\ntitle = \"{title.strip()}\"\n"
+                    front_matter += f"short_title = \"{title[9:]}\"\n"
 
                     for media_type, media_items in media_dict.items():
                         media_items_str = ", ".join(f'"{item}"' for item in media_items)
