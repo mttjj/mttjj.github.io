@@ -5,6 +5,8 @@ theme = 'hugo-bearblog'
 
 disableKinds = ['rss']
 
+titleCaseStyle = 'none'
+
 [taxonomies]
   book = 'books'
   comic = 'comics'
