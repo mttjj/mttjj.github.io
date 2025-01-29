@@ -1,5 +1,6 @@
 import os
 import re
+import paths
 from collections import defaultdict
 from calendar import month_name
 from logger_config import logger
@@ -125,7 +126,7 @@ def transform_diet_pages(dir):
                     front_matter += f"short_title = \"{title[9:]}\"\n"
 
                     for media_type, media_items in media_dict.items():
-                        media_items_str = ", ".join(f'"{item}"' for item in media_items)
+                        media_items_str = ", ".join(f'"{paths.sanitize(item).lower()}"' for item in media_items)
                         front_matter += f"{media_type} = [{media_items_str}]\n"
 
                     front_matter += "+++\n\n"

@@ -1,5 +1,6 @@
 import os
 import shutil
+import paths
 from logger_config import logger
 from directory_config import dir_media_source
 
@@ -121,7 +122,7 @@ def create_taxonomy_term_structure(dir):
                 file_path = os.path.join(root, file)
 
                 # Directory name based on the markdown file (excluding extension)
-                dir_name = os.path.splitext(file)[0]
+                dir_name = paths.sanitize(os.path.splitext(file)[0]).lower()
 
                 # Create the new directory in the same location as the markdown file
                 new_dir_path = os.path.join(root, dir_name)
