@@ -1,5 +1,7 @@
 import subprocess
-from logger_config import logger
+from configuration import config
+
+logger = config.logger
 
 def build_site():
     try:
