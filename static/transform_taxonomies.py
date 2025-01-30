@@ -1,8 +1,9 @@
 import os
 import shutil
 import paths
-from logger_config import logger
-from directory_config import dir_media_source
+from configuration import config
+
+logger = config.logger
 
 def remove_unwanted_files(dir):
     """
@@ -44,23 +45,47 @@ def remove_unwanted_files(dir):
 
 def create_taxonomies(dir):
     """
-    Traverses through a directory (not recursively) and renames directories based on a dictionary.
+    Traverses through a directory (not recursively), renames directories based on a dictionary,
+    and creates an _index.md file with frontmatter.
 
     :param dir: The root directory to traverse.
     """
-    taxonomy_names = {"book": "books", "comic": "comics", "film": "films", "graphic-novel": "graphic-novels", "video-game": "video-games"}
+    taxonomy_names = {
+        "book": "books",
+        "comic": "comics",
+        "film": "films",
+        "graphic-novel": "graphic-novels",
+        "video-game": "video-games"
+    }
+
     if os.path.exists(dir):
         for item in os.listdir(dir):
             item_path = os.path.join(dir, item)
 
             # Check if the item is a directory and if its name is in the rename dictionary
-            if os.path.isdir(item_path) and item in taxonomy_names:
-                new_name = taxonomy_names[item]
+            if os.path.isdir(item_path):
+                new_name = taxonomy_names.get(item, item)  # Default to same name if not in dictionary
                 new_path = os.path.join(dir, new_name)
 
-                # Rename the directory
-                os.rename(item_path, new_path)
-                logger.debug(f"Renamed directory: {item_path} to {new_path}")
+                # Rename the directory if needed
+                if item in taxonomy_names and item != new_name:
+                    os.rename(item_path, new_path)
+                    logger.debug(f"Renamed directory: {item_path} to {new_path}")
+                else:
+                    new_path = item_path  # Keep the original path if no renaming is needed
+
+                # Create _index.md file inside the directory
+                index_file = os.path.join(new_path, "_index.md")
+                title = new_name.replace("-", " ").title()
+                frontmatter = f"""+++
+title = "{title}"
++++
+"""
+
+                if not os.path.exists(index_file):
+                    with open(index_file, "w", encoding="utf-8") as f:
+                        f.write(frontmatter)
+                    logger.debug(f"Created _index.md in {new_path}")
 
 def transform_taxonomy_term_file_contents(dir):
     """
@@ -135,7 +160,7 @@ def create_taxonomy_term_structure(dir):
                 logger.debug(f"Moved and renamed {file_path} to {new_file_path}")
 
 if __name__ == "__main__":
-    directory = dir_media_source
+    directory = config.directory.media_source
 
     logger.info(">>>Removing unwanted files")
     remove_unwanted_files(directory)

@@ -1,7 +1,9 @@
 import os
 import shutil
-from logger_config import logger
-from directory_config import *
+from configuration import config
+
+logger = config.logger
+directory = config.directory
 
 def move_directories(source_dir, destination_dir):
     """
@@ -35,13 +37,13 @@ def move_directories(source_dir, destination_dir):
 
 if __name__ == "__main__":
     logger.info(">>>Moving taxonomies")
-    move_directories(dir_media_source, dir_media_destination)
-    if os.path.exists(dir_media_source):
-        shutil.rmtree(dir_media_source)
+    move_directories(directory.media_source, directory.media_destination)
+    if os.path.exists(directory.media_source):
+        shutil.rmtree(directory.media_source)
     logger.info("<<<")
 
     logger.info(">>>Moving diet entries")
-    move_directories(dir_media_diet_source, dir_media_diet_destination)
-    if os.path.exists(dir_media_diet_source):
-        shutil.rmtree(dir_media_diet_source)
+    move_directories(directory.media_diet_source, directory.media_diet_destination)
+    if os.path.exists(directory.media_diet_source):
+        shutil.rmtree(directory.media_diet_source)
     logger.info("<<<")

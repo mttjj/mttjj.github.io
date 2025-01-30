@@ -3,8 +3,9 @@ import re
 import paths
 from collections import defaultdict
 from calendar import month_name
-from logger_config import logger
-from directory_config import dir_media_diet_source
+from configuration import config
+
+logger = config.logger
 
 def rename_diet_pages(dir):
     """
@@ -144,7 +145,7 @@ def transform_diet_pages(dir):
                     logger.error(f"Error processing file {file_path}: {e}")
 
 if __name__ == "__main__":
-    directory = dir_media_diet_source
+    directory = config.directory.media_diet_source
 
     logger.info(">>>Renaming pages")
     rename_diet_pages(directory)
