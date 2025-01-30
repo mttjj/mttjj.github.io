@@ -1,6 +1,7 @@
 import os
 import re
 import paths
+import text_replacer
 from collections import defaultdict
 from calendar import month_name
 from configuration import config
@@ -83,8 +84,6 @@ def transform_diet_pages(dir):
 
     :param dir: The root directory to start traversal.
     """
-    media_type_map = {"Book" : "books", "Comic" : "comics", "Film" : "films", "Graphic Novel" : "graphic-novels", "Live Theatre" : "live-theatre", "Manga": "manga", "TV" : "tv-series", "Video Game" : "video-games"}
-
     for root, _, files in os.walk(dir):
         for file in files:
             if file.endswith(".md"):
@@ -118,7 +117,7 @@ def transform_diet_pages(dir):
                             media_type, media_item = matches
 
                             # Map media type to replacement text if it exists
-                            media_type = media_type_map.get(media_type, media_type)
+                            media_type = text_replacer.get_taxonomy(media_type)
                             media_dict[media_type].append(media_item)
 
                     # Create the front matter block
