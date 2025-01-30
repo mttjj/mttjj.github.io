@@ -48,7 +48,6 @@ def create_index_files(dir):
     The `_index.md` file will have a title based on the directory's name:
       - If the directory name is a year (e.g., 2015, 2023), the title will be the year.
       - If the directory name is a number representing a month (e.g., 02, 11), the title will be the full month name.
-      - If the directory is a month, the `_index.md` will aggregate content from other files (excluding frontmatter) and include `layout = "single"`.
 
     :param dir: The root directory to start traversal.
     """
@@ -65,27 +64,8 @@ def create_index_files(dir):
             # Check if the directory name is a month number
             elif directory.isdigit() and 1 <= int(directory) <= 12:
                 title = month_name[int(directory)]
-                layout = "single"
+                layout = "month"
 
-                # Aggregate content from other files in the directory
-                content = []
-                for file in os.listdir(dir_path):
-                    file_path = os.path.join(dir_path, file)
-                    if file.endswith(".md") and file != "_index.md":
-                        with open(file_path, 'r', encoding='utf-8') as f:
-                            lines = f.readlines()
-                            # Exclude frontmatter (if any)
-                            content_start = 0
-                            if lines and lines[0].strip() == "+++":
-                                for i in range(1, len(lines)):
-                                    if lines[i].strip() == "+++":
-                                        content_start = i + 1
-                                        break
-                            content.append((file, f"### {file[8:-3]}\n" + "".join(lines[content_start:]) + "\n"))
-
-                # Sort aggregated content by file name
-                content.sort()
-                content = [entry[1] for entry in content]
             else:
                 continue
 
@@ -99,14 +79,10 @@ def create_index_files(dir):
                 f.write(f"""+++
 title = "{title}"
 sort_order = "{directory}"
-"""
-                )
+""")
                 if layout:
                     f.write(f"layout = \"{layout}\"\n")
-                f.write("+++\n\n")
-
-                if directory.isdigit() and 1 <= int(directory) <= 12 and content:
-                    f.write("\n".join(content))
+                f.write("+++")
 
             logger.debug(f"Created file: {index_file_path}")
 
@@ -178,14 +154,14 @@ def transform_diet_pages(dir):
 if __name__ == "__main__":
     directory = config.directory.media_diet_source
 
-    logger.info(">>>Transforming diet pages")
-    transform_diet_pages(directory)
+    logger.info(">>>Renaming pages")
+    rename_diet_pages(directory)
     logger.info("<<<")
 
     logger.info(">>>Creating index files")
     create_index_files(directory)
     logger.info("<<<")
 
-    logger.info(">>>Renaming pages")
-    rename_diet_pages(directory)
+    logger.info(">>>Transforming diet pages")
+    transform_diet_pages(directory)
     logger.info("<<<")
