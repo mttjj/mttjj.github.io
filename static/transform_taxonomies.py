@@ -1,6 +1,7 @@
 import os
 import shutil
 import paths
+import text_replacer
 from configuration import config
 
 logger = config.logger
@@ -50,25 +51,17 @@ def create_taxonomies(dir):
 
     :param dir: The root directory to traverse.
     """
-    taxonomy_names = {
-        "book": "books",
-        "comic": "comics",
-        "film": "films",
-        "graphic-novel": "graphic-novels",
-        "video-game": "video-games"
-    }
-
     if os.path.exists(dir):
         for item in os.listdir(dir):
             item_path = os.path.join(dir, item)
 
             # Check if the item is a directory and if its name is in the rename dictionary
             if os.path.isdir(item_path):
-                new_name = taxonomy_names.get(item, item)  # Default to same name if not in dictionary
+                new_name = text_replacer.get_taxonomy(item)
                 new_path = os.path.join(dir, new_name)
 
                 # Rename the directory if needed
-                if item in taxonomy_names and item != new_name:
+                if item != new_name:
                     os.rename(item_path, new_path)
                     logger.debug(f"Renamed directory: {item_path} to {new_path}")
                 else:
@@ -76,7 +69,7 @@ def create_taxonomies(dir):
 
                 # Create _index.md file inside the directory
                 index_file = os.path.join(new_path, "_index.md")
-                title = new_name.replace("-", " ").title()
+                title = text_replacer.get_taxonomy_title(new_name)
                 frontmatter = f"""+++
 title = "{title}"
 +++
