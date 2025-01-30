@@ -1,0 +1,9 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+<content>
+  {{ range sort .Pages ".Params.sort_order" }}
+    <h3><a href="{{ .Permalink }}">{{ .Params.short_title }}</a></h3>
+    {{ .Content }}
+  {{ end }}
+</content>
+{{ end }}
