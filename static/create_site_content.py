@@ -5,13 +5,16 @@ logger = config.logger
 
 def build_site():
     try:
-        logger.info("##### Transforming Taxonomies")
+        logger.info("----- Exporting Notes")
+        subprocess.run(["python3", "export_notes.py"], check=True)
+
+        logger.info("----- Transforming Taxonomies")
         subprocess.run(["python3", "transform_taxonomies.py"], check=True)
 
-        logger.info("##### Transforming Diet Entries")
+        logger.info("---- Transforming Diet Entries")
         subprocess.run(["python3", "transform_diets.py"], check=True)
 
-        logger.info("##### Moving Files")
+        logger.info("----- Moving Files")
         subprocess.run(["python3", "move_files.py"], check=True)
 
     except subprocess.CalledProcessError as e:

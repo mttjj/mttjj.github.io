@@ -1,7 +1,6 @@
 import os
 import re
-import paths
-import text_replacer
+import utils
 from collections import defaultdict
 from calendar import month_name
 from configuration import config
@@ -125,7 +124,7 @@ def transform_diet_pages(dir):
                             media_type, media_item = matches
 
                             # Map media type to replacement text if it exists
-                            media_type = text_replacer.get_taxonomy(media_type)
+                            media_type = utils.get_taxonomy(media_type)
                             media_dict[media_type].append(media_item)
 
                     # Create the front matter block
@@ -134,7 +133,7 @@ def transform_diet_pages(dir):
                     front_matter += f"short_title = \"{title[9:]}\"\n"
 
                     for media_type, media_items in media_dict.items():
-                        media_items_str = ", ".join(f'"{paths.sanitize(item).lower()}"' for item in media_items)
+                        media_items_str = ", ".join(f'"{utils.sanitize(item).lower()}"' for item in media_items)
                         front_matter += f"{media_type} = [{media_items_str}]\n"
 
                     front_matter += "+++\n\n"
@@ -152,16 +151,13 @@ def transform_diet_pages(dir):
                     logger.error(f"Error processing file {file_path}: {e}")
 
 if __name__ == "__main__":
-    directory = config.directory.media_diet_source
+    directory = config.path.media_diet_source
 
     logger.info(">>>Renaming pages")
     rename_diet_pages(directory)
-    logger.info("<<<")
 
     logger.info(">>>Creating index files")
     create_index_files(directory)
-    logger.info("<<<")
 
     logger.info(">>>Transforming diet pages")
     transform_diet_pages(directory)
-    logger.info("<<<")

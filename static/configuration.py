@@ -1,8 +1,10 @@
 import os
 import logging
 
-class Directory:
+class Path:
     base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    import_dir = os.path.join(base_dir, "../import")
 
     media_source = os.path.join(base_dir, "../import/media")
     media_destination = os.path.join(base_dir, "../content")
@@ -18,7 +20,7 @@ class Logger:
     instance = logging.getLogger(__name__)
 
 class Config:
-    directory = Directory()
+    path = Path()
     logger = Logger.instance
 
 config = Config()
