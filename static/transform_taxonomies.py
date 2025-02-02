@@ -1,28 +1,19 @@
 import os
 import shutil
-import paths
-import text_replacer
+import utils
 from configuration import config
 
 logger = config.logger
 
 def remove_unwanted_files(dir):
     """
-    Recursively traverses a directory to delete directories and files based on conditions.
+    Recursively traverses a directory to delete files based on conditions.
 
     :param dir: The root directory to start traversal.
     """
-    unwanted_dirs = ["author", "comic-publisher", "radio"]
     unwanted_files = ["Book.md", "Comic.md", "Film.md", "Graphic Novel.md", "Live Theatre.md", "Manga.md", "TV.md", "Video Game.md"]
 
     for root, dirs, files in os.walk(dir, topdown=False):
-        # Delete directories matching the specified names
-        for dir_name in dirs:
-            if dir_name in unwanted_dirs:
-                dir_path = os.path.join(root, dir_name)
-                shutil.rmtree(dir_path)
-                logger.debug(f"Deleted directory: {dir_path}")
-
         # Delete files matching the specified names or containing "#~list" on the second line
         for file_name in files:
             file_path = os.path.join(root, file_name)
@@ -57,7 +48,7 @@ def create_taxonomies(dir):
 
             # Check if the item is a directory and if its name is in the rename dictionary
             if os.path.isdir(item_path):
-                new_name = text_replacer.get_taxonomy(item)
+                new_name = utils.get_taxonomy(item)
                 new_path = os.path.join(dir, new_name)
 
                 # Rename the directory if needed
@@ -69,7 +60,7 @@ def create_taxonomies(dir):
 
                 # Create _index.md file inside the directory
                 index_file = os.path.join(new_path, "_index.md")
-                title = text_replacer.get_taxonomy_title(new_name)
+                title = utils.get_taxonomy_title(new_name)
                 frontmatter = f"""+++
 title = "{title}"
 +++
@@ -140,7 +131,7 @@ def create_taxonomy_term_structure(dir):
                 file_path = os.path.join(root, file)
 
                 # Directory name based on the markdown file (excluding extension)
-                dir_name = paths.sanitize(os.path.splitext(file)[0]).lower()
+                dir_name = utils.sanitize(os.path.splitext(file)[0]).lower()
 
                 # Create the new directory in the same location as the markdown file
                 new_dir_path = os.path.join(root, dir_name)
@@ -153,20 +144,16 @@ def create_taxonomy_term_structure(dir):
                 logger.debug(f"Moved and renamed {file_path} to {new_file_path}")
 
 if __name__ == "__main__":
-    directory = config.directory.media_source
+    directory = config.path.media_source
 
     logger.info(">>>Removing unwanted files")
     remove_unwanted_files(directory)
-    logger.info("<<<")
 
     logger.info(">>>Creating taxonomies")
     create_taxonomies(directory)
-    logger.info("<<<")
 
     logger.info(">>>Transforming files")
     transform_taxonomy_term_file_contents(directory)
-    logger.info("<<<")
 
     logger.info(">>>Creating file structure")
     create_taxonomy_term_structure(directory)
-    logger.info("<<<")
