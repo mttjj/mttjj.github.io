@@ -4,17 +4,19 @@ from datetime import datetime
 from pathlib import Path
 
 class Paths:
+    base_dir = Path(__file__).resolve().parent
+
+    logs_dir = base_dir / "logs"
+
     bear_db = "/Users/matthew/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite"
-    base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    import_dir = os.path.join(base_dir, "../import")
-    content_dir = os.path.join(base_dir, "../content")
-    logs_dir = os.path.join(base_dir, "logs")
+    import_dir = base_dir / "../import"
+    media_source = base_dir / import_dir / "media"
+    media_diet_source = base_dir / import_dir / "media-diet"
 
-    media_source = os.path.join(base_dir, "../import/media")
-    media_destination = os.path.join(base_dir, "../content")
-    media_diet_source = os.path.join(base_dir, "../import/media-diet")
-    media_diet_destination = os.path.join(base_dir, "../content/media-diet")
+    content_dir = base_dir / "../content"
+    media_destination = content_dir
+    media_diet_destination = base_dir / content_dir / "media-diet"
 
 class Logger:
     """Configure logging to write to file and console"""
