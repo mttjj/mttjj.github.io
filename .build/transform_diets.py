@@ -151,13 +151,13 @@ def transform_diet_pages(dir):
                     logger.error(f"Error processing file {file_path}: {e}")
 
 if __name__ == "__main__":
-    directory = config.path.media_diet_source
+    directory = config.paths.media_diet_source
 
-    logger.info(">>>Renaming pages")
+    logger.info("Renaming diet pages")
     rename_diet_pages(directory)
 
-    logger.info(">>>Creating index files")
+    logger.info("Creating index files")
     create_index_files(directory)
 
-    logger.info(">>>Transforming diet pages")
+    logger.info("Transforming diet pages")
     transform_diet_pages(directory)
