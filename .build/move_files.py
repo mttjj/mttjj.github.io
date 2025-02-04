@@ -3,7 +3,7 @@ import shutil
 from configuration import config
 
 logger = config.logger
-directory = config.path
+directory = config.paths
 
 def move_directories(source_dir, destination_dir):
     """
@@ -36,12 +36,12 @@ def move_directories(source_dir, destination_dir):
                 logger.debug(f"Moved: {item_path} -> {dest_path}")
 
 if __name__ == "__main__":
-    logger.info(">>>Moving taxonomies")
+    logger.info("Moving taxonomies")
     move_directories(directory.media_source, directory.media_destination)
     if os.path.exists(directory.media_source):
         shutil.rmtree(directory.media_source)
 
-    logger.info(">>>Moving diet entries")
+    logger.info("Moving diet entries")
     move_directories(directory.media_diet_source, directory.media_diet_destination)
     if os.path.exists(directory.media_diet_source):
         shutil.rmtree(directory.media_diet_source)

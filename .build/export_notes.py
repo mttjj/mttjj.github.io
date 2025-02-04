@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import datetime
 from pathlib import Path
 from configuration import config
 
@@ -24,7 +25,7 @@ def sanitize_filename(filename):
     return filename
 
 def export_notes_by_tag(db_path, target_tags, output_dir):
-    logger.debug(f"Starting note export process with {len(target_tags)} tags")
+    logger.info(f"Starting note export process with {len(target_tags)} tags")
     logger.debug(f"Output directory: {output_dir}")
 
     try:
@@ -71,7 +72,7 @@ def export_notes_by_tag(db_path, target_tags, output_dir):
             continue
 
     conn.close()
-    logger.debug("Note export process completed")
+    logger.info("Note export process completed")
 
 def generate_monthly_paths(year):
     # Convert year to string if it's passed as integer
@@ -83,8 +84,9 @@ def generate_monthly_paths(year):
             for month in range(1, 13)]
 
 def main():
-    db_path = "/Users/matthew/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite"
-    output_dir = config.path.import_dir
+    db_path = config.paths.bear_db
+    output_dir = config.paths.import_dir
+    current_year = datetime.now().year
 
     # List of tags to export (with their directory structure)
     tags_to_export = [
@@ -97,21 +99,10 @@ def main():
         "media/tv-series",
         "media/video-game",
     ]
-    tags_to_export.extend(generate_monthly_paths(2012))
-    tags_to_export.extend(generate_monthly_paths(2013))
-    tags_to_export.extend(generate_monthly_paths(2014))
-    tags_to_export.extend(generate_monthly_paths(2015))
-    tags_to_export.extend(generate_monthly_paths(2016))
-    tags_to_export.extend(generate_monthly_paths(2017))
-    tags_to_export.extend(generate_monthly_paths(2018))
-    tags_to_export.extend(generate_monthly_paths(2019))
-    tags_to_export.extend(generate_monthly_paths(2020))
-    tags_to_export.extend(generate_monthly_paths(2021))
-    tags_to_export.extend(generate_monthly_paths(2022))
-    tags_to_export.extend(generate_monthly_paths(2023))
-    tags_to_export.extend(generate_monthly_paths(2024))
-    tags_to_export.extend(generate_monthly_paths(2025))
+    for year in range(2012, current_year + 1):
+        tags_to_export.extend(generate_monthly_paths(year))
 
+    logger.debug(f"tags to export: {tags_to_export}")
     export_notes_by_tag(db_path, tags_to_export, output_dir)
 
 if __name__ == "__main__":

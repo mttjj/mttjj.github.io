@@ -144,16 +144,16 @@ def create_taxonomy_term_structure(dir):
                 logger.debug(f"Moved and renamed {file_path} to {new_file_path}")
 
 if __name__ == "__main__":
-    directory = config.path.media_source
+    directory = config.paths.media_source
 
-    logger.info(">>>Removing unwanted files")
+    logger.info("Removing unwanted files")
     remove_unwanted_files(directory)
 
-    logger.info(">>>Creating taxonomies")
+    logger.info("Creating taxonomies")
     create_taxonomies(directory)
 
-    logger.info(">>>Transforming files")
+    logger.info("Transforming files")
     transform_taxonomy_term_file_contents(directory)
 
-    logger.info(">>>Creating file structure")
+    logger.info("Creating file structure")
     create_taxonomy_term_structure(directory)
