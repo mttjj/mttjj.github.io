@@ -2,9 +2,9 @@
 <h1>{{ .Title }}</h1>
 <content>
   <ul class="blog-posts">
-    {{ range sort .Pages ".Params.sort_order" }}
+    {{ range sort .Pages ".Date" }}
     <li>
-      <a href="{{ .Permalink }}">{{ (or (.Params.short_title) (.Params.Title)) }}</a>
+      <a href="{{ .Permalink }}">{{ .Date | time.Format "2006" }}</a>
     </li>
     {{ else }}
     <li>

@@ -1,8 +1,8 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
+<h1>{{ .Date | time.Format "January 2006" }}</h1>
 <content>
-  {{ range sort .Pages ".Params.sort_order" }}
-    <h3><a href="{{ .Permalink }}">{{ .Params.short_title }}</a></h3>
+  {{ range sort .Pages ".Date" }}
+    <h3><a href="{{ .Permalink }}">{{ .Date | time.Format "2 (Monday)" }}</a></h3>
     {{ .Content }}
   {{ end }}
 </content>

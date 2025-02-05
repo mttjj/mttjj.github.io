@@ -99,7 +99,7 @@ def main():
         "media/tv-series",
         "media/video-game",
     ]
-    for year in range(2012, current_year + 1):
+    for year in range(2011, current_year + 1):
         tags_to_export.extend(generate_monthly_paths(year))
 
     logger.debug(f"tags to export: {tags_to_export}")

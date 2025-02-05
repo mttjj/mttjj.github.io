@@ -3,8 +3,8 @@
   {{ .Content }}
   <h2>References</h2>
   <ul>
-    {{ range .Pages }}
-      <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+    {{ range sort .Pages ".Date" }}
+      <li><a href="{{ .RelPermalink }}">{{ .Date | time.Format "2 Jan 2006 (Mon)" }}</a></li>
     {{ end }}
   </ul>
 {{ end }}
