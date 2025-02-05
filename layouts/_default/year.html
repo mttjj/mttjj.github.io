@@ -1,0 +1,16 @@
+{{ define "main" }}
+<h1>{{ .Date | time.Format "2006" }}</h1>
+<content>
+  <ul class="blog-posts">
+    {{ range sort .Pages ".Date" }}
+    <li>
+      <a href="{{ .Permalink }}">{{ .Date | time.Format "January" }}</a>
+    </li>
+    {{ else }}
+    <li>
+      Nothing here yet.
+    </li>
+    {{ end }}
+  </ul>
+</content>
+{{ end }}

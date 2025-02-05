@@ -1,8 +1,10 @@
 import os
 import re
 import utils
-from collections import defaultdict
+from datetime import date
+from datetime import datetime
 from calendar import month_name
+from collections import defaultdict
 from configuration import config
 
 logger = config.logger
@@ -44,10 +46,9 @@ def create_index_files(dir):
     """
     Recursively traverses a directory and creates a `_index.md` file in each directory.
 
-    The `_index.md` file will have a title based on the directory's name:
-      - If the directory name is a year (e.g., 2015, 2023), the title will be the year.
-      - If the directory name is a month (e.g., 02, 11), the title will be the full month name and year,
-        with an additional short_title containing just the month name.
+    The frontmatter will be:
+      - For year directories: date = <first day of year>, layout = "year", title = <year>
+      - For month directories: date = <first day of month>, layout = "month", title = <Month Year>
 
     :param dir: The root directory to start traversal.
     """
@@ -58,18 +59,20 @@ def create_index_files(dir):
 
             # Check if the directory name is a year
             if directory.isdigit() and len(directory) == 4:
+                year = int(directory)
+                frontmatter_date = date(year, 1, 1).isoformat()
+                layout = "year"
                 title = directory
-                layout = None
-                short_title = None
 
             # Check if the directory name is a month number
             elif directory.isdigit() and 1 <= int(directory) <= 12:
                 parent_dir = os.path.basename(os.path.dirname(dir_path))
                 if parent_dir.isdigit() and len(parent_dir) == 4:  # Verify parent is a year
-                    month_str = month_name[int(directory)]
-                    title = f"{month_str} {parent_dir}"
-                    short_title = month_str
+                    month = int(directory)
+                    year = int(parent_dir)
+                    frontmatter_date = date(year, month, 1).isoformat()
                     layout = "month"
+                    title = f"{month_name[month]} {year}"
                 else:
                     continue
             else:
@@ -83,14 +86,10 @@ def create_index_files(dir):
             # Write the `_index.md` file
             with open(index_file_path, 'w', encoding='utf-8') as f:
                 f.write(f"""+++
+date = "{frontmatter_date}"
+layout = "{layout}"
 title = "{title}"
-sort_order = "{directory}"
-""")
-                if layout:
-                    f.write(f'layout = "{layout}"\n')
-                if short_title:
-                    f.write(f'short_title = "{short_title}"\n')
-                f.write("+++")
++++""")
 
             logger.debug(f"Created file: {index_file_path}")
 
@@ -119,8 +118,17 @@ def transform_diet_pages(dir):
                         logger.debug(f"Skipping file with insufficient lines: {file_path}")
                         continue
 
-                    # Extract the first line (title) and remove the first two lines
+                    # Extract the date from the first line (format: "# 2025-01-04: Saturday")
                     first_line = lines[0].strip()
+                    date_match = re.search(r"# (\d{4}-\d{2}-\d{2}):", first_line)
+                    if not date_match:
+                        logger.debug(f"Skipping file with invalid date format: {file_path}")
+                        continue
+
+                    date_str = date_match.group(1)
+                    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                    formatted_title = date_obj.strftime("%-d %B %Y (%A)")  # e.g., "4 January 2025 (Saturday)"
+
                     remaining_lines = lines[2:]
 
                     # Initialize a dictionary to hold media types and their items
@@ -137,9 +145,11 @@ def transform_diet_pages(dir):
                             media_dict[media_type].append(media_item)
 
                     # Create the front matter block
-                    title = first_line[1:] if len(first_line) > 0 else ""
-                    front_matter = f"+++\ntitle = \"{title.strip()}\"\n"
-                    front_matter += f"short_title = \"{title[9:]}\"\n"
+                    front_matter = f"""+++
+date = "{date_str}"
+title = "{formatted_title}"
+layout = "daily-diet"
+"""
 
                     for media_type, media_items in media_dict.items():
                         media_items_str = ", ".join(f'"{utils.sanitize(item).lower()}"' for item in media_items)
