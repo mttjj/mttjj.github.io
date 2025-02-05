@@ -1,6 +1,5 @@
 +++
-title = "October 2023"
-sort_order = "10"
+date = "2023-10-01"
 layout = "month"
-short_title = "October"
+title = "October 2023"
 +++

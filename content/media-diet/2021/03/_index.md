@@ -1,6 +1,5 @@
 +++
-title = "March 2021"
-sort_order = "03"
+date = "2021-03-01"
 layout = "month"
-short_title = "March"
+title = "March 2021"
 +++
