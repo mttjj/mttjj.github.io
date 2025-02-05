@@ -46,7 +46,8 @@ def create_index_files(dir):
 
     The `_index.md` file will have a title based on the directory's name:
       - If the directory name is a year (e.g., 2015, 2023), the title will be the year.
-      - If the directory name is a number representing a month (e.g., 02, 11), the title will be the full month name.
+      - If the directory name is a month (e.g., 02, 11), the title will be the full month name and year,
+        with an additional short_title containing just the month name.
 
     :param dir: The root directory to start traversal.
     """
@@ -59,12 +60,18 @@ def create_index_files(dir):
             if directory.isdigit() and len(directory) == 4:
                 title = directory
                 layout = None
+                short_title = None
 
             # Check if the directory name is a month number
             elif directory.isdigit() and 1 <= int(directory) <= 12:
-                title = month_name[int(directory)]
-                layout = "month"
-
+                parent_dir = os.path.basename(os.path.dirname(dir_path))
+                if parent_dir.isdigit() and len(parent_dir) == 4:  # Verify parent is a year
+                    month_str = month_name[int(directory)]
+                    title = f"{month_str} {parent_dir}"
+                    short_title = month_str
+                    layout = "month"
+                else:
+                    continue
             else:
                 continue
 
@@ -80,7 +87,9 @@ title = "{title}"
 sort_order = "{directory}"
 """)
                 if layout:
-                    f.write(f"layout = \"{layout}\"\n")
+                    f.write(f'layout = "{layout}"\n')
+                if short_title:
+                    f.write(f'short_title = "{short_title}"\n')
                 f.write("+++")
 
             logger.debug(f"Created file: {index_file_path}")
