@@ -1,4 +1,5 @@
 +++
+date = "2012-01-01"
+layout = "year"
 title = "2012"
-sort_order = "2012"
 +++

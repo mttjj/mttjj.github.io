@@ -1,6 +1,5 @@
 +++
-title = "July 2019"
-sort_order = "07"
+date = "2019-07-01"
 layout = "month"
-short_title = "July"
+title = "July 2019"
 +++

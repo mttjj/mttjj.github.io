@@ -1,6 +1,5 @@
 +++
-title = "August 2015"
-sort_order = "08"
+date = "2015-08-01"
 layout = "month"
-short_title = "August"
+title = "August 2015"
 +++

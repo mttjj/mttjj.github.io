@@ -1,6 +1,5 @@
 +++
-title = "May 2020"
-sort_order = "05"
+date = "2020-05-01"
 layout = "month"
-short_title = "May"
+title = "May 2020"
 +++
