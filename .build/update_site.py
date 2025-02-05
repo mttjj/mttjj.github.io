@@ -18,8 +18,8 @@ def build_site():
         logger.info("Moving Files")
         subprocess.run(["python3", paths.base_dir / "move_files.py"], check=True)
 
-        # logger.info("Performing SCM Operations")
-        # subprocess.run(["python3", paths.base_dir / "perform_scm_operations.py"], check=True)
+        logger.info("Performing SCM Operations")
+        subprocess.run(["python3", paths.base_dir / "perform_scm_operations.py"], check=True)
 
         logger.info("Site successfully updated")
 
