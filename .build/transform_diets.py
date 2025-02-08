@@ -9,6 +9,9 @@ from configuration import config
 
 logger = config.logger
 
+DATE_PATTERN = re.compile(r"# (\d{4}-\d{2}-\d{2}):")
+MEDIA_PATTERN = re.compile(r"\[\[(.*?)\]\]")
+
 def rename_diet_pages(dir):
     """
     Recursively traverses a directory, renames markdown files based on the 9th and 10th
@@ -93,81 +96,79 @@ title = "{title}"
 
             logger.debug(f"Created file: {index_file_path}")
 
-def transform_diet_pages(dir):
+def transform_diet_pages(directory):
     """
     Recursively traverses a directory, modifies markdown files by removing and adding text, and ensures idempotency.
 
-    :param dir: The root directory to start traversal.
+    Args:
+        directory: The root directory to start traversal.
     """
-    for root, _, files in os.walk(dir):
-        for file in files:
-            if file.endswith(".md"):
-                file_path = os.path.join(root, file)
+    for root, _, files in os.walk(directory):
+        for file in [f for f in files if f.endswith('.md')]:
+            file_path = os.path.join(root, file)
 
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        lines = f.readlines()
+            try:
+                # Read file content at once
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
 
-                    # Check if the file already contains the front matter block
-                    if lines and lines[0].strip() == "+++":
-                        logger.debug(f"Skipping already processed file: {file_path}")
-                        continue
+                # Skip if already processed
+                if content.startswith('+++'):
+                    logger.debug(f"Skipping already processed file: {file_path}")
+                    continue
 
-                    # Ensure there are enough lines to process
-                    if len(lines) < 2:
-                        logger.debug(f"Skipping file with insufficient lines: {file_path}")
-                        continue
+                lines = content.splitlines()
+                if len(lines) < 2:
+                    logger.debug(f"Skipping file with insufficient lines: {file_path}")
+                    continue
 
-                    # Extract the date from the first line (format: "# 2025-01-04: Saturday")
-                    first_line = lines[0].strip()
-                    date_match = re.search(r"# (\d{4}-\d{2}-\d{2}):", first_line)
-                    if not date_match:
-                        logger.debug(f"Skipping file with invalid date format: {file_path}")
-                        continue
+                # Extract date
+                date_match = DATE_PATTERN.search(lines[0])
+                if not date_match:
+                    logger.debug(f"Skipping file with invalid date format: {file_path}")
+                    continue
 
-                    date_str = date_match.group(1)
-                    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-                    formatted_title = date_obj.strftime("%-d %B %Y (%A)")  # e.g., "4 January 2025 (Saturday)"
+                date_str = date_match.group(1)
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                formatted_title = date_obj.strftime("%-d %B %Y (%A)")
 
-                    remaining_lines = lines[2:]
+                # Process media items
+                media_dict = defaultdict(set)  # Using set for unique items
+                for line in lines[2:]:
+                    matches = MEDIA_PATTERN.findall(line)
+                    if len(matches) == 2:
+                        media_type, media_item = matches
+                        media_type = utils.get_taxonomy(media_type)
+                        media_dict[media_type].add(utils.sanitize(media_item).lower())
 
-                    # Initialize a dictionary to hold media types and their items
-                    media_dict = defaultdict(list)
+                # Build front matter using list comprehension and join
+                front_matter_lines = [
+                    "+++",
+                    f'date = "{date_str}"',
+                    f'title = "{formatted_title}"',
+                    'layout = "daily-diet"'
+                ]
 
-                    # Process each remaining line for media types and items
-                    for line in remaining_lines:
-                        matches = re.findall(r"\[\[(.*?)\]\]", line)
-                        if len(matches) == 2:
-                            media_type, media_item = matches
+                front_matter_lines.extend(
+                    f'{media_type} = [{", ".join(f""""{item}\"""" for item in sorted(items))}]'
+                    for media_type, items in sorted(media_dict.items())
+                )
 
-                            # Map media type to replacement text if it exists
-                            media_type = utils.get_taxonomy(media_type)
-                            media_dict[media_type].append(media_item)
+                front_matter = "\n".join(front_matter_lines) + "\n+++\n\n"
 
-                    # Create the front matter block
-                    front_matter = f"""+++
-date = "{date_str}"
-title = "{formatted_title}"
-layout = "daily-diet"
-"""
+                # Clean content and write file
+                cleaned_content = "\n".join(
+                    line.replace("[", "").replace("]", "")
+                    for line in lines[2:]
+                )
 
-                    for media_type, media_items in media_dict.items():
-                        media_items_str = ", ".join(f'"{utils.sanitize(item).lower()}"' for item in media_items)
-                        front_matter += f"{media_type} = [{media_items_str}]\n"
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(f"{front_matter}{cleaned_content}")
 
-                    front_matter += "+++\n\n"
+                logger.debug(f"Processed file: {file_path}")
 
-                    # Remove '[' and ']' from the remaining lines
-                    cleaned_lines = [line.replace("[", "").replace("]", "") for line in remaining_lines]
-
-                    # Write the updated content back to the file
-                    with open(file_path, 'w', encoding='utf-8') as f:
-                        f.write(front_matter)
-                        f.writelines(cleaned_lines)
-
-                    logger.debug(f"Processed file: {file_path}")
-                except Exception as e:
-                    logger.error(f"Error processing file {file_path}: {e}")
+            except Exception as e:
+                logger.error(f"Error processing file {file_path}: {e}")
 
 if __name__ == "__main__":
     directory = config.paths.media_diet_source
