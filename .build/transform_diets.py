@@ -157,10 +157,7 @@ def transform_diet_pages(directory):
                 front_matter = "\n".join(front_matter_lines) + "\n+++\n\n"
 
                 # Clean content and write file
-                cleaned_content = "\n".join(
-                    line.replace("[", "").replace("]", "")
-                    for line in lines[2:]
-                )
+                cleaned_content = update_content(lines[2:])
 
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(f"{front_matter}{cleaned_content}")
@@ -169,6 +166,44 @@ def transform_diet_pages(directory):
 
             except Exception as e:
                 logger.error(f"Error processing file {file_path}: {e}")
+
+def format_content_line(line):
+    """
+    Formats a line by converting bracketed media type and item into a markdown link
+    while preserving the rest of the line content.
+
+    Args:
+        line: String containing bracketed content
+
+    Returns:
+        String with markdown link and preserved content
+    """
+    matches = MEDIA_PATTERN.findall(line)
+    if len(matches) == 2:
+        media_type, media_item = matches
+        taxonomy = utils.get_taxonomy(media_type)
+        sanitized_item = utils.sanitize(media_item).lower()
+
+        # Replace the [[type]][[item]] pattern with the markdown link
+        # while preserving the rest of the line
+        pattern = f"\\[\\[{media_type}\\]\\]:\\s*\\[\\[{re.escape(media_item)}\\]\\]"
+        replacement = f"{media_type}: [{media_item}](/{taxonomy}/{sanitized_item})"
+        return re.sub(pattern, replacement, line)
+
+    return line.replace("[", "").replace("]", "")
+
+def update_content(content_lines):
+    """
+    Process content lines to create markdown links while preserving other content.
+
+    Args:
+        content_lines: List of strings to process
+
+    Returns:
+        String with processed content, lines joined by newlines
+    """
+    return "\n".join(format_content_line(line) for line in content_lines)
+
 
 if __name__ == "__main__":
     directory = config.paths.media_diet_source
