@@ -1,4 +1,4 @@
-baseURL = 'https://matthewjanssen.org/'
+baseURL = 'https://matthewjanssen.com/'
 languageCode = 'en-us'
 title = "Matthew's Website"
 theme = 'hugo-bearblog'
