@@ -1,7 +1,7 @@
-import os
 import logging
 from datetime import datetime
 from pathlib import Path
+
 
 class Paths:
     base_dir = Path(__file__).resolve().parent
@@ -18,8 +18,10 @@ class Paths:
     media_destination = content_dir
     media_diet_destination = base_dir / content_dir / "media-diet"
 
+
 class Logger:
     """Configure logging to write to file and console"""
+
     # Create logs directory if it doesn't exist
     log_dir = Path(Paths.logs_dir)
     log_dir.mkdir(exist_ok=True)
@@ -28,16 +30,18 @@ class Logger:
     log_file = log_dir / f"update_site_{datetime.now().strftime('%Y%m%d')}.log"
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
+        format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(log_file),
-            logging.StreamHandler()  # Also output to console
-        ]
+            logging.StreamHandler(),  # Also output to console
+        ],
     )
     instance = logging.getLogger(__name__)
+
 
 class Config:
     paths = Paths()
     logger = Logger.instance
+
 
 config = Config()

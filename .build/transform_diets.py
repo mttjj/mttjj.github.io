@@ -12,6 +12,7 @@ logger = config.logger
 DATE_PATTERN = re.compile(r"# (\d{4}-\d{2}-\d{2}):")
 MEDIA_PATTERN = re.compile(r"\[\[(.*?)\]\]")
 
+
 def rename_diet_pages(dir):
     """
     Recursively traverses a directory, renames markdown files based on the 9th and 10th
@@ -45,6 +46,7 @@ def rename_diet_pages(dir):
                 else:
                     logger.debug(f"Skipping rename, target file exists: {new_path}")
 
+
 def create_index_files(dir):
     """
     Recursively traverses a directory and creates a `_index.md` file in each directory.
@@ -70,7 +72,9 @@ def create_index_files(dir):
             # Check if the directory name is a month number
             elif directory.isdigit() and 1 <= int(directory) <= 12:
                 parent_dir = os.path.basename(os.path.dirname(dir_path))
-                if parent_dir.isdigit() and len(parent_dir) == 4:  # Verify parent is a year
+                if (
+                    parent_dir.isdigit() and len(parent_dir) == 4
+                ):  # Verify parent is a year
                     month = int(directory)
                     year = int(parent_dir)
                     frontmatter_date = date(year, month, 1).isoformat()
@@ -87,14 +91,17 @@ def create_index_files(dir):
                 continue
 
             # Write the `_index.md` file
-            with open(index_file_path, 'w', encoding='utf-8') as f:
-                f.write(f"""+++
+            with open(index_file_path, "w", encoding="utf-8") as f:
+                f.write(
+                    f"""+++
 date = "{frontmatter_date}"
 layout = "{layout}"
 title = "{title}"
-+++""")
++++"""
+                )
 
             logger.debug(f"Created file: {index_file_path}")
+
 
 def transform_diet_pages(directory):
     """
@@ -104,16 +111,16 @@ def transform_diet_pages(directory):
         directory: The root directory to start traversal.
     """
     for root, _, files in os.walk(directory):
-        for file in [f for f in files if f.endswith('.md')]:
+        for file in [f for f in files if f.endswith(".md")]:
             file_path = os.path.join(root, file)
 
             try:
                 # Read file content at once
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 # Skip if already processed
-                if content.startswith('+++'):
+                if content.startswith("+++"):
                     logger.debug(f"Skipping already processed file: {file_path}")
                     continue
 
@@ -146,7 +153,7 @@ def transform_diet_pages(directory):
                     "+++",
                     f'date = "{date_str}"',
                     f'title = "{formatted_title}"',
-                    'layout = "daily-diet"'
+                    'layout = "daily-diet"',
                 ]
 
                 front_matter_lines.extend(
@@ -159,13 +166,14 @@ def transform_diet_pages(directory):
                 # Clean content and write file
                 cleaned_content = update_content(lines[2:])
 
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(f"{front_matter}{cleaned_content}")
 
                 logger.debug(f"Processed file: {file_path}")
 
             except Exception as e:
                 logger.error(f"Error processing file {file_path}: {e}")
+
 
 def format_content_line(line):
     """
@@ -191,6 +199,7 @@ def format_content_line(line):
         return re.sub(pattern, replacement, line)
 
     return line.replace("[", "").replace("]", "")
+
 
 def update_content(content_lines):
     """

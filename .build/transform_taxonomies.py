@@ -5,13 +5,23 @@ from configuration import config
 
 logger = config.logger
 
+
 def remove_unwanted_files(dir):
     """
     Recursively traverses a directory to delete files based on conditions.
 
     :param dir: The root directory to start traversal.
     """
-    unwanted_files = ["Book.md", "Comic.md", "Film.md", "Graphic Novel.md", "Live Theatre.md", "Manga.md", "TV.md", "Video Game.md"]
+    unwanted_files = [
+        "Book.md",
+        "Comic.md",
+        "Film.md",
+        "Graphic Novel.md",
+        "Live Theatre.md",
+        "Manga.md",
+        "TV.md",
+        "Video Game.md",
+    ]
 
     for root, dirs, files in os.walk(dir, topdown=False):
         # Delete files matching the specified names or containing "#~list" on the second line
@@ -27,13 +37,16 @@ def remove_unwanted_files(dir):
             # Check if "#~list" is on the second line of the file
             if file_name.endswith(".md"):
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as file:
+                    with open(file_path, "r", encoding="utf-8") as file:
                         lines = file.readlines()
                         if len(lines) > 1 and "#~list" in lines[1]:
                             os.remove(file_path)
-                            logger.debug(f"Deleted file due to '#list' on second line: {file_path}")
+                            logger.debug(
+                                f"Deleted file due to '#list' on second line: {file_path}"
+                            )
                 except Exception as e:
                     logger.error(f"Error reading file {file_path}: {e}")
+
 
 def create_taxonomies(dir):
     """
@@ -56,7 +69,9 @@ def create_taxonomies(dir):
                     os.rename(item_path, new_path)
                     logger.debug(f"Renamed directory: {item_path} to {new_path}")
                 else:
-                    new_path = item_path  # Keep the original path if no renaming is needed
+                    new_path = (
+                        item_path  # Keep the original path if no renaming is needed
+                    )
 
                 # Create _index.md file inside the directory
                 index_file = os.path.join(new_path, "_index.md")
@@ -71,6 +86,7 @@ title = "{title}"
                         f.write(frontmatter)
                     logger.debug(f"Created _index.md in {new_path}")
 
+
 def transform_taxonomy_term_file_contents(dir):
     """
     Recursively traverses a directory, modifies markdown files by removing and adding text, and updates their content.
@@ -83,7 +99,7 @@ def transform_taxonomy_term_file_contents(dir):
                 file_path = os.path.join(root, file)
 
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
+                    with open(file_path, "r", encoding="utf-8") as f:
                         lines = f.readlines()
 
                     # Check if the file already contains the front matter block
@@ -93,7 +109,9 @@ def transform_taxonomy_term_file_contents(dir):
 
                     # Ensure there are enough lines to process
                     if len(lines) < 2:
-                        logger.debug(f"Skipping file with insufficient lines: {file_path}")
+                        logger.debug(
+                            f"Skipping file with insufficient lines: {file_path}"
+                        )
                         continue
 
                     # Extract the first line (title) and remove the first two lines
@@ -101,20 +119,25 @@ def transform_taxonomy_term_file_contents(dir):
                     remaining_lines = lines[2:]
 
                     # Remove '[' and ']' from the remaining lines
-                    cleaned_lines = [line.replace("[", "").replace("]", "") for line in remaining_lines if "#quote" not in line]
+                    cleaned_lines = [
+                        line.replace("[", "").replace("]", "")
+                        for line in remaining_lines
+                        if "#quote" not in line
+                    ]
 
                     # Create the front matter block
                     title = first_line[1:].strip() if len(first_line) > 0 else ""
-                    front_matter = f"+++\ntitle = \"{title}\"\n+++\n\n"
+                    front_matter = f'+++\ntitle = "{title}"\n+++\n\n'
 
                     # Write the updated content back to the file
-                    with open(file_path, 'w', encoding='utf-8') as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.write(front_matter)
                         f.write("\n".join(cleaned_lines))
 
                     logger.debug(f"Processed file: {file_path}")
                 except Exception as e:
                     logger.error(f"Error processing file {file_path}: {e}")
+
 
 def create_taxonomy_term_structure(dir):
     """
@@ -142,6 +165,7 @@ def create_taxonomy_term_structure(dir):
                 shutil.move(file_path, new_file_path)
 
                 logger.debug(f"Moved and renamed {file_path} to {new_file_path}")
+
 
 if __name__ == "__main__":
     directory = config.paths.media_source

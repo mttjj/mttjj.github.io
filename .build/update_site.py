@@ -5,6 +5,7 @@ import sys
 logger = config.logger
 paths = config.paths
 
+
 def build_site():
     try:
         python3 = "/opt/homebrew/bin/python3"
@@ -14,7 +15,9 @@ def build_site():
         subprocess.run([python3, paths.base_dir / "export_notes.py"], check=True)
 
         logger.info("Transforming Taxonomies")
-        subprocess.run([python3, paths.base_dir / "transform_taxonomies.py"], check=True)
+        subprocess.run(
+            [python3, paths.base_dir / "transform_taxonomies.py"], check=True
+        )
 
         logger.info("Transforming Diet Entries")
         subprocess.run([python3, paths.base_dir / "transform_diets.py"], check=True)
@@ -23,12 +26,15 @@ def build_site():
         subprocess.run([python3, paths.base_dir / "move_files.py"], check=True)
 
         logger.info("Performing SCM Operations")
-        subprocess.run([python3, paths.base_dir / "perform_scm_operations.py"], check=True)
+        subprocess.run(
+            [python3, paths.base_dir / "perform_scm_operations.py"], check=True
+        )
 
         logger.info("Site successfully updated")
 
     except subprocess.CalledProcessError as e:
         logger.error(f"An error occurred while running a script: {e}")
+
 
 if __name__ == "__main__":
     build_site()
