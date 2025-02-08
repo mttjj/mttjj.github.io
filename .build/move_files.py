@@ -5,6 +5,7 @@ from configuration import config
 logger = config.logger
 directory = config.paths
 
+
 def move_directories(source_dir, destination_dir):
     """
     Moves all top-level directories from the source directory to the destination directory.
@@ -34,6 +35,7 @@ def move_directories(source_dir, destination_dir):
                 # Move the directory
                 shutil.move(item_path, dest_path)
                 logger.debug(f"Moved: {item_path} -> {dest_path}")
+
 
 if __name__ == "__main__":
     logger.info("Moving taxonomies")

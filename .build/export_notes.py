@@ -6,6 +6,7 @@ from configuration import config
 
 logger = config.logger
 
+
 def create_directories(base_dir, tag_path):
     """Create nested directories from tag path if they don't exist"""
     try:
@@ -17,12 +18,14 @@ def create_directories(base_dir, tag_path):
         logger.error(f"Failed to create directory {full_path}: {str(e)}")
         raise
 
+
 def sanitize_filename(filename):
     """Remove or replace invalid filename characters"""
     invalid_chars = '<>:"/\\|?*'
     for char in invalid_chars:
-        filename = filename.replace(char, ' ')
+        filename = filename.replace(char, " ")
     return filename
+
 
 def export_notes_by_tag(db_path, target_tags, output_dir):
     logger.info(f"Starting note export process with {len(target_tags)} tags")
@@ -59,13 +62,15 @@ def export_notes_by_tag(db_path, target_tags, output_dir):
                     file_path = os.path.join(full_path, f"{safe_title}.md")
 
                     try:
-                        with open(file_path, 'w', encoding='utf-8') as f:
+                        with open(file_path, "w", encoding="utf-8") as f:
                             f.write(text)
                         logger.debug(f"Successfully exported note: {safe_title}")
                     except IOError as e:
                         logger.error(f"Failed to write note {safe_title}: {str(e)}")
                 else:
-                    logger.warning(f"Skipped note with missing title or content in tag {tag_path}")
+                    logger.warning(
+                        f"Skipped note with missing title or content in tag {tag_path}"
+                    )
 
         except sqlite3.Error as e:
             logger.error(f"Database query failed for tag {tag_path}: {str(e)}")
@@ -74,14 +79,15 @@ def export_notes_by_tag(db_path, target_tags, output_dir):
     conn.close()
     logger.info("Note export process completed")
 
+
 def generate_monthly_paths(year):
     # Convert year to string if it's passed as integer
     year_str = str(year)
 
     # Use list comprehension to create paths for all 12 months
     # zfill(2) ensures months are padded with leading zero if needed
-    return [f"media-diet/{year_str}/{str(month).zfill(2)}"
-            for month in range(1, 13)]
+    return [f"media-diet/{year_str}/{str(month).zfill(2)}" for month in range(1, 13)]
+
 
 def main():
     db_path = config.paths.bear_db
@@ -104,6 +110,7 @@ def main():
 
     logger.debug(f"tags to export: {tags_to_export}")
     export_notes_by_tag(db_path, tags_to_export, output_dir)
+
 
 if __name__ == "__main__":
     main()
