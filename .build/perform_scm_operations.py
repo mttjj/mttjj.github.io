@@ -4,14 +4,16 @@ import sys
 from configuration import config
 
 logger = config.logger
-content_dir = config.paths.content_dir
+base_dir = config.paths.base_dir
+content_dir = config.paths.content_dir.resolve()
 
 def has_changes():
     """Check if there are any changes in the content directory"""
     result = subprocess.run(
         ['git', 'status', '--porcelain', content_dir],
         capture_output=True,
-        text=True
+        text=True,
+        cwd=base_dir
     )
     return bool(result.stdout.strip())
 
@@ -19,7 +21,7 @@ def git_stage_content():
     """Stage all changes in the content directory"""
     try:
         subprocess.run(['git', 'add', content_dir],
-                      capture_output=True, text=True)
+                      capture_output=True, text=True, cwd=base_dir)
         logger.info("Successfully staged changes in content directory")
         return True
     except subprocess.CalledProcessError as e:
@@ -31,7 +33,7 @@ def git_commit(message):
     """Create a commit with the staged changes"""
     try:
         result = subprocess.run(['git', 'commit', '-m', message],
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, cwd=base_dir)
         logger.info(f"Successfully committed changes with message: {message}")
         logger.debug(f"Commit output: {result.stdout}")
         return True
@@ -47,7 +49,7 @@ def git_push():
     """Push commits to remote repository"""
     try:
         result = subprocess.run(['git', 'push'],
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, cwd=base_dir)
         logger.info("Successfully pushed changes to remote repository")
         logger.debug(f"Push output: {result.stdout}")
         return True
