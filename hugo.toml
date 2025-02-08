@@ -16,7 +16,3 @@ titleCaseStyle = 'none'
   manga = 'manga'
   tv-series = 'tv-series'
   video-game = 'video-games'
-
-# hugo-bearblog config
-[params]
-  hideMadeWithLine = true
