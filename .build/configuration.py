@@ -25,7 +25,7 @@ class Logger:
     log_dir.mkdir(exist_ok=True)
 
     # Configure logging
-    log_file = log_dir / f"git_operations_{datetime.now().strftime('%Y%m%d')}.log"
+    log_file = log_dir / f"update_site_{datetime.now().strftime('%Y%m%d')}.log"
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
