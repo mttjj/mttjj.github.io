@@ -8,4 +8,4 @@ title = "Pictures at a Revolution"
 
 **Published**: 2008
 
-**Rating**: 
+**Rating**: B
