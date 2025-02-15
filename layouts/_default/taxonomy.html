@@ -1,9 +1,13 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
-  {{ range sort .Pages ".Title" }}
-  <l>
-    <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
-  </l>
-  {{ end }}
+<h1>{{ .Title }}</h1>
+{{ .Content }}
+<content>
+  <ul class="taxonomy">
+    {{ range sort .Pages ".Title" }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    </li>
+    {{ end }}
+  </ul>
+</content>
 {{ end }}

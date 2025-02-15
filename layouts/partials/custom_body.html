@@ -1,0 +1,30 @@
+<script>
+    //
+    // Credit: Adapted with minor modifications from Herman's blog (https://herman.bearblog.dev/blog/)
+    //
+    // Select the content container and the blog posts list
+    const mainContainer = document.querySelector('content');
+    const items = document.querySelector('ul.taxonomy');
+
+    if (items) {
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.id = 'searchInput';
+        searchInput.placeholder = 'Search...';
+        searchInput.style.display = 'block';
+        searchInput.style.marginTop = '16px';
+
+        mainContainer.insertBefore(searchInput, items);
+
+        // Add event listener to filter posts based on input
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const posts = document.querySelectorAll('.taxonomy li');
+
+            posts.forEach(post => {
+                const title = post.textContent.toLowerCase();
+                post.style.display = title.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+</script>
