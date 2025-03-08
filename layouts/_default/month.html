@@ -2,8 +2,8 @@
 <h1>{{ .Date | time.Format "January 2006" }}</h1>
 <content>
   {{ range sort .Pages ".Date" }}
-    <h3><a href="{{ .Permalink }}">{{ .Date | time.Format "2 (Monday)" }}</a></h3>
-    {{ .Content }}
+  <h3><a href="{{ .Permalink }}">{{ .Date | time.Format "2 (Monday)" }}</a></h3>
+  {{ .Content }}
   {{ end }}
 </content>
 {{ end }}
