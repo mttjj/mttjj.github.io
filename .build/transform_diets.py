@@ -228,7 +228,7 @@ def format_content_line(line, indent_level=0):
 
         # Add CSS class only to media items (top-level list items)
         if is_list_item and current_indent == 0:
-            css_class = "entry " + media_type
+            css_class = "entry " + taxonomy
             content = f'<li class="{css_class}">{content}</li>'
             logger.debug("Added media-item class to top-level item")
         elif is_list_item:
