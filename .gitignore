@@ -5,3 +5,4 @@ resources/
 import/
 __pycache__
 .build/logs
+.build/venv
