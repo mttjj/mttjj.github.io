@@ -1,0 +1,52 @@
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .filter-buttons {
+        display: block;
+        gap: 5px;
+        margin-bottom: 20px;
+    }
+
+    .filter-button {
+        padding: 5px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: 0px;
+        border-radius: 5px;
+    }
+
+    .filter-button.active {
+        background-color: #1d8616;
+        color: white;
+    }
+</style>
+<div class="filter-buttons">
+    Show:
+    <button class="filter-button active" data-type="books">Books</button>
+    <button class="filter-button active" data-type="comics">Comics</button>
+    <button class="filter-button active" data-type="films">Films</button>
+    <button class="filter-button active" data-type="graphic-novels">Graphic Novels</button>
+    <button class="filter-button active" data-type="live-theatre">Live Theatre</button>
+    <button class="filter-button active" data-type="manga">Manga</button>
+    <button class="filter-button active" data-type="tv-series">TV</button>
+    <button class="filter-button active" data-type="video-games">Video Games</button>
+</div>
+<script>
+    document.querySelectorAll('.filter-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            button.classList.toggle('active');
+            var type = button.getAttribute('data-type');
+            var entries = document.querySelectorAll('.entry.' + type);
+
+            entries.forEach(function (entry) {
+                if (button.classList.contains('active')) {
+                    entry.classList.remove('hidden');
+                } else {
+                    entry.classList.add('hidden');
+                }
+            });
+        });
+    });
+</script>
