@@ -1,6 +1,7 @@
 import os
 import re
 import utils
+import markdown
 from datetime import date
 from datetime import datetime
 from calendar import month_name
@@ -163,7 +164,7 @@ def transform_diet_pages(directory):
 
                 front_matter = "\n".join(front_matter_lines) + "\n+++\n\n"
 
-                # Clean content and write file
+                # Clean content and convert to HTML
                 cleaned_content = clean_and_format_content(file_path, lines[2:])
 
                 with open(file_path, "w", encoding="utf-8") as f:
@@ -175,172 +176,84 @@ def transform_diet_pages(directory):
                 logger.error(f"Error processing file {file_path}: {e}")
 
 
-def format_content_line(line, indent_level=0):
+def process_media_links(text):
     """
-    Formats a line by converting bracketed media type and item into an HTML link
-    and adding appropriate list tags based on indentation.
+    Process custom media links in the format [[type]]:[[item]] to HTML links.
 
     Args:
-        line: String containing bracketed content
-        indent_level: Current indentation level for nested lists
+        text: String containing markdown content with custom media links
 
     Returns:
-        Tuple of (formatted_html, is_list_item, new_indent_level)
+        String with media links converted to HTML
     """
-    # line = line.strip()
-    if not line:
-        return "", False, indent_level
 
-    # Determine indentation level
-    leading_spaces = len(line) - len(line.lstrip())
-    current_indent = leading_spaces // 2  # Assuming 2 spaces per indent level
+    def replace_media_link(match):
+        full_text = match.group(0)
+        parts = MEDIA_PATTERN.findall(full_text)
 
-    logger.debug(
-        f"Processing line: '{line}' with leading spaces: {leading_spaces}, calculated indent: {current_indent}"
-    )
+        if len(parts) == 2:
+            media_type, media_item = parts
+            taxonomy = utils.get_taxonomy(media_type)
+            sanitized_item = utils.sanitize(media_item).lower()
 
-    # Check if it's a list item first
-    is_list_item = line.lstrip().startswith("*")
-    content = line.lstrip()
+            return (
+                f'{media_type}: <a href="/{taxonomy}/{sanitized_item}">{media_item}</a>'
+            )
+        return full_text
 
-    if is_list_item:
-        # Remove the asterisk and any following whitespace
-        content = content[1:].strip()
-        logger.debug(f"Found list item at indent {current_indent}: '{content}'")
+    # Pattern to match [[type]]:[[item]] pattern
+    pattern = r"\[\[(.*?)\]\]:\s*\[\[(.*?)\]\]"
+    return re.sub(pattern, replace_media_link, text)
 
-    # Process brackets for media items
-    matches = MEDIA_PATTERN.findall(content)
-    if len(matches) == 2:
-        media_type, media_item = matches
-        taxonomy = utils.get_taxonomy(media_type)
-        sanitized_item = utils.sanitize(media_item).lower()
 
-        logger.debug(
-            f"Found media item: type={media_type}, taxonomy={taxonomy}, item={media_item}"
-        )
+def add_css_classes(html):
+    """
+    Add CSS classes to top-level list items that contain media links.
 
-        # Replace the [[type]][[item]] pattern with the HTML link
-        pattern = f"\\[\\[{media_type}\\]\\]:\\s*\\[\\[{re.escape(media_item)}\\]\\]"
-        replacement = (
-            f'{media_type}: <a href="/{taxonomy}/{sanitized_item}">{media_item}</a>'
-        )
-        content = re.sub(pattern, replacement, content).replace("\\", "")
+    Args:
+        html: HTML string to process
 
-        # Add CSS class only to media items (top-level list items)
-        if is_list_item and current_indent == 0:
-            css_class = "entry " + taxonomy
-            content = f'<li class="{css_class}">{content}</li>'
-            logger.debug("Added media-item class to top-level item")
-        elif is_list_item:
-            # Regular nested list item without special class
-            content = f"<li>{content}</li>"
-            logger.debug("Added regular li tag to nested item")
-    else:
-        # Regular content, just remove brackets
-        content = content.replace("[", "").replace("]", "")
-        if is_list_item:
-            content = f"<li>{content}</li>"
-            logger.debug("Added regular li tag to non-media list item")
+    Returns:
+        HTML with CSS classes added to appropriate list items
+    """
+    # Pattern to find <li> elements with media links
+    pattern = r'<li>(.*?<a href="/([^"]+)/([^"]+)".*?)'
 
-    logger.debug(
-        f"Returning: content='{content}', is_list_item={is_list_item}, indent={current_indent}"
-    )
-    return content, is_list_item, current_indent
+    def add_class(match):
+        content = match.group(1)
+        taxonomy = match.group(2)
+        return f'<li class="entry {taxonomy}">{content}'
+
+    return re.sub(pattern, add_class, html)
 
 
 def clean_and_format_content(file_path, content_lines):
     """
-    Process content lines to create HTML with proper list nesting.
+    Process content lines to create HTML using the markdown library.
 
     Args:
+        file_path: Path to the file being processed
         content_lines: List of strings to process
 
     Returns:
         String with fully processed HTML content
     """
-    html_lines = []
-    current_indent = 0
-    list_open = False
+    # Join the content lines
+    content = "\n".join(content_lines)
 
-    logger.debug(f"Starting to process {len(content_lines)} lines")
+    if "\\<no entries\\>" in content:
+        return "<p>&lt;no entries&gt;</p>"
 
-    for i, line in enumerate(content_lines):
-        logger.debug(f"Line {i+1}: Processing '{line}'")
-        formatted_line, is_list_item, line_indent = format_content_line(
-            line, current_indent
-        )
+    # Process custom media links before markdown conversion
+    content = process_media_links(content)
 
-        if not formatted_line:
-            logger.debug(f"Line {i+1}: Empty line, skipping")
-            continue
+    # Convert markdown to HTML
+    html = markdown.markdown(content, extensions=["extra"], tab_length=2)
 
-        # Handle list opening/closing based on indentation
-        if is_list_item:
-            logger.debug(
-                f"Line {i+1}: List item with indent {line_indent}, current indent {current_indent}"
-            )
+    # Add CSS classes to list items with media links
+    html = add_css_classes(html)
 
-            # Need to open a new list
-            if not list_open:
-                html_lines.append("<ul>")
-                list_open = True
-                logger.debug(f"Line {i+1}: Opening new list")
-
-            # Handle indentation changes for nested lists
-            while line_indent > current_indent:
-                html_lines.append("<ul>")
-                current_indent += 1
-                logger.debug(
-                    f"Line {i+1}: Increasing indent to {current_indent}, adding <ul>"
-                )
-
-            while line_indent < current_indent:
-                html_lines.append("</ul>")
-                current_indent -= 1
-                logger.debug(
-                    f"Line {i+1}: Decreasing indent to {current_indent}, adding </ul>"
-                )
-
-            html_lines.append(formatted_line)
-        else:
-            logger.debug(f"Line {i+1}: Non-list item, closing any open lists")
-
-            # Close any open lists
-            while list_open:
-                html_lines.append("</ul>")
-                current_indent -= 1
-                list_open = current_indent > -1
-                logger.debug(
-                    f"Line {i+1}: Closing list, new indent {current_indent}, list_open={list_open}"
-                )
-
-            html_lines.append(formatted_line)
-
-    # Close any remaining open lists
-    logger.debug(
-        f"End of content, current_indent={current_indent}, closing any remaining lists"
-    )
-    while list_open:
-        html_lines.append("</ul>")
-        current_indent -= 1
-        list_open = current_indent > -1
-        logger.debug(f"Added closing </ul>, new indent {current_indent}")
-
-    result = "\n".join(html_lines)
-    logger.debug(f"Final HTML has {len(html_lines)} lines")
-
-    # Count opening and closing ul tags as a sanity check
-    open_tags = result.count("<ul>")
-    close_tags = result.count("</ul>")
-    balanced = open_tags == close_tags
-    logger.debug(
-        f"Tag count check: <ul>: {open_tags}, </ul>: {close_tags}, balanced: {balanced}"
-    )
-
-    if not balanced:
-        logger.error(f"File has unbalanced list tags: {file_path}")
-
-    return result
+    return html
 
 
 if __name__ == "__main__":
