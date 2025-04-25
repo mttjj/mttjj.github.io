@@ -6,4 +6,4 @@ title = "Bone"
 
 **Author**: Smith, Jeff
 
-**Release**: 2004
+**Published**: 2004

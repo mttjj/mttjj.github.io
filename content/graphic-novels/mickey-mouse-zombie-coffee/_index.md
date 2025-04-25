@@ -6,4 +6,4 @@ title = "Mickey Mouse: Zombie Coffee"
 
 **Author**: Loisel, Régis
 
-**Release**: 2022
+**Published**: 2022

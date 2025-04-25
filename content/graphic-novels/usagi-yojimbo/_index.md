@@ -6,4 +6,4 @@ title = "Usagi Yojimbo"
 
 **Author**: Sakai, Stan
 
-**Release**: 1984
+**Published**: 1984

@@ -6,4 +6,4 @@ title = "Batman: The Killing Joke"
 
 **Author**: Moore, Alan
 
-**Release**: 1988
+**Published**: 1988

@@ -6,4 +6,4 @@ title = "Okinawa"
 
 **Author**: Higa, Susumu
 
-**Release**: 2023
+**Published**: 2023

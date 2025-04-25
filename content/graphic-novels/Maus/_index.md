@@ -6,4 +6,4 @@ title = "Maus"
 
 **Author**: Spiegelman, Art
 
-**Release**: 1993
+**Published**: 1993

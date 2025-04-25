@@ -6,4 +6,4 @@ title = "From Hell"
 
 **Author**: Moore, Alan
 
-**Release**: 1999
+**Published**: 1999
