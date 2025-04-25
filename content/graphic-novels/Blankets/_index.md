@@ -6,4 +6,4 @@ title = "Blankets"
 
 **Author**: Thompson, Craig
 
-**Release**: 2003
+**Published**: 2003

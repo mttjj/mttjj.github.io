@@ -6,4 +6,4 @@ title = "Amazing Spider-Man: Family Business"
 
 **Author**: Waid, Mark & Robinson, James
 
-**Release**: 2014
+**Published**: 2014
