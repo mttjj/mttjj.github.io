@@ -20,4 +20,4 @@ title = "The New Life"
 
   "Not different enough."
 
-  ”Not yet. In the meantime, we must live in the future we hope to make." (p211)
+  "Not yet. In the meantime, we must live in the future we hope to make." (p211)
