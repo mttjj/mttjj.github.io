@@ -8,4 +8,4 @@ title = "Never Flinch"
 
 **Published**: 2025
 
-**Rating**: 
+**Rating**: A-
