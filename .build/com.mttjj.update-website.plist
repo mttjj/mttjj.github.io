@@ -5,10 +5,10 @@
         <key>Label</key>
         <string>com.mttjj.update-website</string>
         <key>Program</key>
-        <string>/opt/homebrew/bin/python3</string>
+        <string>/Users/matthew/.pyenv/shims/python</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/opt/homebrew/bin/python3</string>
+            <string>/Users/matthew/.pyenv/shims/python</string>
             <string>/Users/matthew/dev/mttjj.github.io/.build/update_site.py</string>
         </array>
         <key>StartCalendarInterval</key>
