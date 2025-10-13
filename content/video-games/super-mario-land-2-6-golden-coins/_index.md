@@ -1,0 +1,4 @@
++++
+title = "Super Mario Land 2: 6 Golden Coins"
++++
+
