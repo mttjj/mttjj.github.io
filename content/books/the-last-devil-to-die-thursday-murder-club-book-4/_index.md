@@ -4,7 +4,7 @@ title = "The Last Devil to Die (Thursday Murder Club Book 4)"
 
 
 
-**Author**: Richard Osman
+**Author**: Osman, Richard
 
 **Published**: 2023
 
