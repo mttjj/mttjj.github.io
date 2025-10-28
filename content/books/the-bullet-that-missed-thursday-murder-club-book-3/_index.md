@@ -4,7 +4,7 @@ title = "The Bullet That Missed (Thursday Murder Club Book 3)"
 
 
 
-**Author**: Richard Osman
+**Author**: Osman, Richard
 
 **Published**: 2022
 

@@ -4,7 +4,7 @@ title = "We Solve Murders"
 
 
 
-**Author**: Richard Osman
+**Author**: Osman, Richard
 
 **Published**: 2024
 
