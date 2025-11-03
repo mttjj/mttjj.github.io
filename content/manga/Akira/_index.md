@@ -6,4 +6,4 @@ title = "Akira"
 
 **Author**: Otomo, Katsuhiro
 
-**Release**: 1982
+**Published**: 1982

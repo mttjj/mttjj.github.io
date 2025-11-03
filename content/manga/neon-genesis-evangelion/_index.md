@@ -6,4 +6,4 @@ title = "Neon Genesis Evangelion"
 
 **Author**: Sadamoto, Yoshiyuki
 
-**Release**: 1994
+**Published**: 1994
