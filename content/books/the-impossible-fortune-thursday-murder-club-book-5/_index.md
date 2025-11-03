@@ -8,4 +8,4 @@ title = "The Impossible Fortune (Thursday Murder Club Book 5)"
 
 **Published**: 2025
 
-**Rating**: 
+**Rating**: B+
