@@ -8,4 +8,4 @@ title = "Source Code: My Beginnings"
 
 **Published**: 2025
 
-**Rating**: 
+**Rating**: A
