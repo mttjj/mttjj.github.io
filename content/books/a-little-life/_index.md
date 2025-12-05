@@ -8,4 +8,4 @@ title = "A Little Life"
 
 **Published**: 2015
 
-**Rating**:
+**Rating**: A-
