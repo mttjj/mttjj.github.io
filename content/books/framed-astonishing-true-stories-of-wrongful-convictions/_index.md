@@ -8,4 +8,4 @@ title = "Framed: Astonishing True Stories of Wrongful Convictions"
 
 **Published**: 2024
 
-**Rating**:
+**Rating**: A-
