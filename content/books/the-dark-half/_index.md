@@ -8,4 +8,4 @@ title = "The Dark Half"
 
 **Published**: 1989
 
-**Rating**:
+**Rating**: B-
