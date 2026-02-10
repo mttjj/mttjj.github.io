@@ -8,4 +8,4 @@ title = "Hope: Entertainer of the Century"
 
 **Published**: 2014
 
-**Rating**: 
+**Rating**: B+
