@@ -8,7 +8,7 @@ title = "1984"
 
 **Published**: 1949
 
-**Rating**: 
+**Rating**: B+
 
 
 
