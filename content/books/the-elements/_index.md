@@ -8,4 +8,4 @@ title = "The Elements"
 
 **Published**: 2025
 
-**Rating**:
+**Rating**: A
