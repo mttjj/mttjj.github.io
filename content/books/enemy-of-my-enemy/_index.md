@@ -8,4 +8,4 @@ title = "Enemy of My Enemy"
 
 **Published**: 2026
 
-**Rating**:
+**Rating**: B
