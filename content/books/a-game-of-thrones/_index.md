@@ -1,5 +1,5 @@
 +++
-title = "A Game of Thrones (Ice and Fire Book 1)"
+title = "A Game of Thrones"
 +++
 
 
