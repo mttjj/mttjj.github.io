@@ -8,7 +8,7 @@ title = "John of John"
 
 **Published**: 2026
 
-**Rating**:
+**Rating**: A-
 
 
 
