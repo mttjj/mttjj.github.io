@@ -8,11 +8,8 @@
 
 2. **Add Python binaries to macOS Full Disk Access**:
    - Open System Settings > Privacy & Security > Full Disk Access
-   - Click the + button and add these two binaries:
-     - `/Users/matthew/.pyenv/versions/3.13.8/bin/python3` (main interpreter)
-     - `.build/venv/bin/python` (venv interpreter)
-   
-   *Note: Use the + button and navigate directly. Do NOT drag aliases.*
+   - Navigate to `/Users/matthew/.pyenv/version/3.13.8/bin/python3` in Finder and Right-Click > Show Original
+   - Drag the original binary onto the Full Disk Access window in System Settings (clicking the + button does NOT work)
 
 ## Launch Agent
 
