@@ -1,17 +1,40 @@
-## Main Script
-* `update_site.py`
-* Make sure it's executable: `chmod + x update_site.py`
+## Setup
 
-## macOS Permissions
-Python needs "full disk permissions" to be able to run without having the annoying popup when it executes as part of this launch daemon.
-1. Open System Settings > Privacy & Security > Full Disk Access
-2. Open Finder and navigate to `/opt/homebrew/bin/python3`
-3. Right-click on the Alias and "Show Original"
-4. Drag the actual executable onto the list in System Settings.
+1. **Initialize the virtual environment** (one-time):
+   ```bash
+   python3 setup.py
+   ```
+   This creates the venv and installs dependencies from `requirements.txt`.
 
-Dragging the alias into the list will NOT work! Clicking the + icon and trying to navigate to the python executable will NOT work!
+2. **Add Python binaries to macOS Full Disk Access**:
+   - Open System Settings > Privacy & Security > Full Disk Access
+   - Click the + button and add these two binaries:
+     - `/Users/matthew/.pyenv/versions/3.13.8/bin/python3` (main interpreter)
+     - `.build/venv/bin/python` (venv interpreter)
+   
+   *Note: Use the + button and navigate directly. Do NOT drag aliases.*
 
 ## Launch Agent
-* Copy the file to `~/Library/LaunchAgents/`
-* Load the job: `launchctl load ~/Library/LaunchAgents/com.mttjj.update-website.plist`
-* Unload the job if required: `launchctl unload ~/Library/LaunchAgents/com.mttjj.update-website.plist`
+
+1. Copy the plist to LaunchAgents:
+   ```bash
+   cp com.mttjj.update-website.plist ~/Library/LaunchAgents/
+   ```
+
+2. Load the job:
+   ```bash
+   launchctl load ~/Library/LaunchAgents/com.mttjj.update-website.plist
+   ```
+
+3. To unload:
+   ```bash
+   launchctl unload ~/Library/LaunchAgents/com.mttjj.update-website.plist
+   ```
+
+## Scripts
+
+- `update_site.py`: Main orchestrator (runs sub-scripts in sequence)
+- `setup.py`: One-time initialization (creates venv, installs deps)
+- `export_notes.py`, `transform_taxonomies.py`, `transform_diets.py`, `move_files.py`, `perform_scm_operations.py`: Individual tasks
+- `configuration.py`: Shared paths and logging
+- `utils.py`: Shared utilities
