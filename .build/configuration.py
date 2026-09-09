@@ -18,6 +18,8 @@ class Paths:
     media_destination = content_dir
     media_diet_destination = base_dir / content_dir / "media-diet"
 
+    data_dir = base_dir / "../data"
+
 
 class Logger:
     """Configure logging to write to file and console"""

@@ -48,6 +48,11 @@ def build_site():
         logger.info("Moving Files")
         subprocess.run([venv_python, paths.base_dir / "move_files.py"], check=True)
 
+        logger.info("Generating Media Stats")
+        subprocess.run(
+            [venv_python, paths.base_dir / "generate_media_stats.py"], check=True
+        )
+
         logger.info("Performing SCM Operations")
         subprocess.run(
             [venv_python, paths.base_dir / "perform_scm_operations.py"], check=True

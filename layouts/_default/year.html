@@ -1,5 +1,18 @@
 {{ define "main" }}
 <h1>{{ .Date | time.Format "2006" }}</h1>
+{{ partial "activity_heatmap.html" . }}
+{{ with index .Site.Data.media_diet_stats.yearly (.Date | time.Format "2006") }}
+<p class="year-stats">
+  {{ index . "books" }} books &middot;
+  {{ index . "comics" }} comics &middot;
+  {{ index . "films" }} films &middot;
+  {{ index . "graphic-novels" }} graphic novels &middot;
+  {{ index . "live-theatre" }} live theatre &middot;
+  {{ index . "manga" }} manga &middot;
+  {{ index . "tv-series" }} TV series &middot;
+  {{ index . "video-games" }} video games
+</p>
+{{ end }}
 <content>
   <ul class="blog-posts">
     {{ range sort .Pages ".Date" }}

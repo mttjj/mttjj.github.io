@@ -1,0 +1,83 @@
+{{ $year := .Date | time.Format "2006" }}
+{{ $counts := .Site.Data.media_diet_stats.daily_counts }}
+{{ $weekdayOffsets := dict "Sunday" 0 "Monday" 1 "Tuesday" 2 "Wednesday" 3 "Thursday" 4 "Friday" 5 "Saturday" 6 }}
+
+{{ $jan1 := time (printf "%s-01-01" $year) }}
+{{ $dec31 := time (printf "%s-12-31" $year) }}
+{{ $startOffset := index $weekdayOffsets ($jan1.Format "Monday") }}
+{{ $endOffset := sub 6 (index $weekdayOffsets ($dec31.Format "Monday")) }}
+{{ $gridStart := $jan1.AddDate 0 0 (int (mul $startOffset -1)) }}
+{{ $daysInYear := $dec31.YearDay }}
+{{ $totalDays := add (add $startOffset $daysInYear) $endOffset }}
+{{ $numWeeks := div $totalDays 7 }}
+
+{{ $cellSize := 11 }}
+{{ $gap := 3 }}
+{{ $step := add $cellSize $gap }}
+{{ $svgWidth := add (mul $numWeeks $step) $gap }}
+{{ $svgHeight := add (mul 7 $step) $gap }}
+
+<div class="activity-heatmap">
+  <svg viewBox="0 0 {{ $svgWidth }} {{ $svgHeight }}" width="100%" role="img" aria-label="{{ $year }} activity heatmap">
+    {{- range $i := seq 0 (sub $totalDays 1) }}
+    {{- $day := $gridStart.AddDate 0 0 $i }}
+    {{- if eq ($day.Format "2006") $year }}
+    {{- $dateStr := $day.Format "2006-01-02" }}
+    {{- $col := div $i 7 }}
+    {{- $row := mod $i 7 }}
+    {{- $count := 0 }}
+    {{- with index $counts $dateStr }}{{ $count = . }}{{ end }}
+    {{- $level := $count }}
+    {{- if gt $level 4 }}{{ $level = 4 }}{{ end }}
+    <a href="/media-diet/{{ $day.Format "2006/01/02" }}/"><rect
+        x="{{ add (mul $col $step) $gap }}"
+        y="{{ add (mul $row $step) $gap }}"
+        width="{{ $cellSize }}"
+        height="{{ $cellSize }}"
+        rx="2"
+        class="heatmap-cell level-{{ $level }}"
+      ><title>{{ $day.Format "2 Jan 2006" }}: {{ $count }} {{ if eq $count 1 }}entry{{ else }}entries{{ end }}</title></rect></a>
+    {{- end }}
+    {{- end }}
+  </svg>
+</div>
+
+<style>
+  .activity-heatmap {
+    margin: 1em 0;
+  }
+
+  .activity-heatmap svg {
+    display: block;
+    height: auto;
+  }
+
+  .heatmap-cell {
+    stroke: var(--text-color);
+    stroke-opacity: 0.15;
+  }
+
+  .heatmap-cell.level-0 {
+    fill: var(--background-color);
+  }
+
+  .heatmap-cell.level-1 {
+    fill: var(--link-color);
+    fill-opacity: 0.35;
+  }
+
+  .heatmap-cell.level-2 {
+    fill: var(--link-color);
+    fill-opacity: 0.55;
+  }
+
+  .heatmap-cell.level-3 {
+    fill: var(--link-color);
+    fill-opacity: 0.75;
+  }
+
+  .heatmap-cell.level-4 {
+    fill: var(--link-color);
+    fill-opacity: 1;
+  }
+</style>

@@ -5,12 +5,14 @@ from configuration import config
 logger = config.logger
 base_dir = config.paths.base_dir
 content_dir = config.paths.content_dir.resolve()
+data_dir = config.paths.data_dir.resolve()
+tracked_paths = [content_dir, data_dir]
 
 
 def has_changes():
-    """Check if there are any changes in the content directory"""
+    """Check if there are any changes in the tracked content/data directories"""
     result = subprocess.run(
-        ["git", "status", "--porcelain", content_dir],
+        ["git", "status", "--porcelain", *tracked_paths],
         capture_output=True,
         text=True,
         cwd=base_dir,
@@ -19,12 +21,15 @@ def has_changes():
 
 
 def git_stage_content():
-    """Stage all changes in the content directory"""
+    """Stage all changes in the tracked content/data directories"""
     try:
         subprocess.run(
-            ["git", "add", content_dir], capture_output=True, text=True, cwd=base_dir
+            ["git", "add", *tracked_paths],
+            capture_output=True,
+            text=True,
+            cwd=base_dir,
         )
-        logger.info("Successfully staged changes in content directory")
+        logger.info("Successfully staged changes in content/data directories")
         return True
     except subprocess.CalledProcessError as e:
         logger.error(f"Error staging changes: {e}")
