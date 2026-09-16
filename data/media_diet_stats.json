@@ -5736,7 +5736,7 @@
     "2026-09-12": 5,
     "2026-09-13": 6,
     "2026-09-14": 10,
-    "2026-09-15": 0,
+    "2026-09-15": 4,
     "2026-09-16": 0,
     "2026-09-17": 0,
     "2026-09-18": 0,
@@ -6029,13 +6029,13 @@
     "2026": {
       "books": 20,
       "comics": 31,
-      "days_logged": 220,
+      "days_logged": 221,
       "films": 48,
       "graphic-novels": 2,
       "live-theatre": 4,
       "manga": 0,
-      "total_entries": 134,
-      "tv-series": 17,
+      "total_entries": 135,
+      "tv-series": 18,
       "video-games": 12
     }
   }
