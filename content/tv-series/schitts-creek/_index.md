@@ -1,4 +1,0 @@
-+++
-title = "Schitt’s Creek"
-+++
-

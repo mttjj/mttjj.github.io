@@ -1,4 +1,0 @@
-+++
-title = "The Vietnam War"
-+++
-

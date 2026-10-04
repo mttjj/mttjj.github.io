@@ -1,4 +1,0 @@
-+++
-title = "Heated Rivalry"
-+++
-

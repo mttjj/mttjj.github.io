@@ -1,4 +1,0 @@
-+++
-title = "The Righteous Gemstones"
-+++
-

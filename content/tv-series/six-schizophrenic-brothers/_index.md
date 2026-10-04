@@ -1,4 +1,0 @@
-+++
-title = "Six Schizophrenic Brothers"
-+++
-
