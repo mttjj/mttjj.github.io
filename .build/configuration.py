@@ -8,7 +8,7 @@ class Paths:
 
     logs_dir = base_dir / "logs"
 
-    bear_db = "/Users/matthew/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite"
+    bear_cli = "/Applications/Bear.app/Contents/MacOS/bearcli"
 
     import_dir = base_dir / "../import"
     media_source = base_dir / import_dir / "media"

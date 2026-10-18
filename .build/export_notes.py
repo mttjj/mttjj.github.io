@@ -1,5 +1,6 @@
-import sqlite3
+import json
 import os
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from configuration import config
@@ -27,56 +28,73 @@ def sanitize_filename(filename):
     return filename
 
 
-def export_notes_by_tag(db_path, target_tags, output_dir):
+def export_notes_by_tag(target_tags, output_dir):
     logger.info(f"Starting note export process with {len(target_tags)} tags")
     logger.debug(f"Output directory: {output_dir}")
-
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        logger.debug(f"Successfully connected to database: {db_path}")
-    except sqlite3.Error as e:
-        logger.error(f"Database connection failed: {str(e)}")
-        raise
 
     for tag_path in target_tags:
         logger.debug(f"Processing tag: {tag_path}")
         full_path = create_directories(output_dir, tag_path)
 
         try:
-            query = """
-            SELECT DISTINCT n.ZTITLE, n.ZTEXT
-            FROM ZSFNOTE n
-            JOIN Z_5TAGS nt ON n.Z_PK = nt.Z_5NOTES
-            JOIN ZSFNOTETAG t ON nt.Z_13TAGS = t.Z_PK
-            WHERE t.ZTITLE = ? AND n.ZTRASHED = 0
-            """
-
-            cursor.execute(query, (tag_path,))
-            notes = cursor.fetchall()
+            result = subprocess.run(
+                [
+                    config.paths.bear_cli,
+                    "search",
+                    "--query",
+                    f"!#{tag_path}",
+                    "--location",
+                    "all",
+                    "--format",
+                    "json",
+                    "--fields",
+                    "title,content,location",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            notes = json.loads(result.stdout)
+            if not isinstance(notes, list):
+                raise ValueError("Expected bearcli search to return a JSON array")
             logger.debug(f"Found {len(notes)} notes for tag {tag_path}")
+        except (
+            OSError,
+            subprocess.CalledProcessError,
+            json.JSONDecodeError,
+            ValueError,
+        ) as e:
+            logger.error(f"Failed to export notes for tag {tag_path}: {e}")
+            raise
 
-            for title, text in notes:
-                if title and text:
-                    safe_title = sanitize_filename(title)
-                    file_path = os.path.join(full_path, f"{safe_title}.md")
+        for note in notes:
+            if not isinstance(note, dict):
+                raise ValueError(f"Invalid note returned for tag {tag_path}")
 
-                    try:
-                        with open(file_path, "w", encoding="utf-8") as f:
-                            f.write(text)
-                        logger.debug(f"Successfully exported note: {safe_title}")
-                    except IOError as e:
-                        logger.error(f"Failed to write note {safe_title}: {str(e)}")
-                else:
-                    logger.warning(
-                        f"Skipped note with missing title or content in tag {tag_path}"
-                    )
+            location = note.get("location")
+            if location == "trash":
+                continue
+            if location not in {"notes", "archive"}:
+                raise ValueError(f"Invalid note location returned for tag {tag_path}")
 
-        except sqlite3.Error as e:
-            logger.error(f"Database query failed for tag {tag_path}: {str(e)}")
-            continue
+            title = note.get("title")
+            text = note.get("content")
+            if isinstance(title, str) and title and isinstance(text, str) and text:
+                safe_title = sanitize_filename(title)
+                file_path = os.path.join(full_path, f"{safe_title}.md")
 
-    conn.close()
+                try:
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        f.write(text)
+                    logger.debug(f"Successfully exported note: {safe_title}")
+                except IOError as e:
+                    logger.error(f"Failed to write note {safe_title}: {str(e)}")
+                    raise
+            else:
+                logger.warning(
+                    f"Skipped note with missing title or content in tag {tag_path}"
+                )
+
     logger.info("Note export process completed")
 
 
@@ -90,7 +108,6 @@ def generate_monthly_paths(year):
 
 
 def main():
-    db_path = config.paths.bear_db
     output_dir = config.paths.import_dir
     current_year = datetime.now().year
 
@@ -109,7 +126,7 @@ def main():
         tags_to_export.extend(generate_monthly_paths(year))
 
     logger.debug(f"tags to export: {tags_to_export}")
-    export_notes_by_tag(db_path, tags_to_export, output_dir)
+    export_notes_by_tag(tags_to_export, output_dir)
 
 
 if __name__ == "__main__":

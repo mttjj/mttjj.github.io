@@ -1,15 +1,14 @@
 ## Setup
 
-1. **Initialize the virtual environment** (one-time):
+1. **Install Bear 2.8 or later**:
+   The build script uses Bear's command-line tool at
+   `/Applications/Bear.app/Contents/MacOS/bearcli`.
+
+2. **Initialize the virtual environment** (one-time):
    ```bash
    python3 setup.py
    ```
    This creates the venv and installs dependencies from `requirements.txt`.
-
-2. **Add Python binaries to macOS Full Disk Access**:
-   - Open System Settings > Privacy & Security > Full Disk Access
-   - Navigate to `/Users/matthew/.pyenv/version/3.13.8/bin/python3` in Finder and Right-Click > Show Original
-   - Drag the original binary onto the Full Disk Access window in System Settings (clicking the + button does NOT work)
 
 ## Launch Agent
 
@@ -35,3 +34,6 @@
 - `export_notes.py`, `transform_taxonomies.py`, `transform_diets.py`, `move_files.py`, `perform_scm_operations.py`: Individual tasks
 - `configuration.py`: Shared paths and logging
 - `utils.py`: Shared utilities
+
+`export_notes.py` reads tagged notes through `bearcli`; it no longer accesses
+Bear's SQLite database directly.
