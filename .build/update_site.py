@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import time
 from configuration import config
 
 logger = config.logger
@@ -27,8 +28,25 @@ def get_venv_python():
     return venv_python
 
 
+BEAR_SYNC_WAIT_SECONDS = 180
+
+
+def ensure_bear_running():
+    """Launch Bear in the background (it may not have relaunched after a
+    Mac App Store update) and give it time to sync from iCloud."""
+    running = subprocess.run(["pgrep", "-x", "Bear"], capture_output=True).returncode == 0
+    if running:
+        logger.info("Bear already running")
+        return
+    logger.info("Bear not running; launching it to sync from iCloud")
+    subprocess.run(["open", "-g", "-a", "Bear"], check=True)
+    time.sleep(BEAR_SYNC_WAIT_SECONDS)
+
+
 def build_site():
     try:
+        ensure_bear_running()
+
         # Get the venv Python path (assumes setup.py has already been run)
         venv_python = get_venv_python()
 
