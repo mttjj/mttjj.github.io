@@ -8,4 +8,4 @@ title = "The Holocaust: A New History"
 
 **Published**: 2017
 
-**Rating**:
+**Rating**: A
