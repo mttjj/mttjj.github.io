@@ -5806,7 +5806,7 @@
     "2026-11-21": 5,
     "2026-11-22": 3,
     "2026-11-23": 3,
-    "2026-11-24": 0,
+    "2026-11-24": 2,
     "2026-11-25": 0,
     "2026-11-26": 0,
     "2026-11-27": 0,
@@ -6027,14 +6027,14 @@
       "video-games": 17
     },
     "2026": {
-      "books": 26,
+      "books": 27,
       "comics": 49,
-      "days_logged": 290,
+      "days_logged": 291,
       "films": 63,
       "graphic-novels": 2,
       "live-theatre": 4,
       "manga": 0,
-      "total_entries": 182,
+      "total_entries": 183,
       "tv-series": 22,
       "video-games": 16
     }
